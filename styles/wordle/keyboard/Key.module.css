@@ -1,0 +1,24 @@
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.actionKey {
+  padding: 1em 2em;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid lightgreen;
+}
+
+.regKey {
+  width: 35px;
+  height: 35px;
+  border: 1px solid lightblue;
+}
+
+.key:active {
+  background-color: lightblue
+}

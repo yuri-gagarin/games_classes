@@ -1,0 +1,8 @@
+.keyRowOuter {
+  display: flex;
+  justify-content: center;
+}
+.keyRowInner {
+  border: 2px solid  lightblue;
+  margin-bottom: 0.5em;
+}
