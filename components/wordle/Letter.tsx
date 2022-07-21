@@ -6,6 +6,7 @@ interface ILetterProps {
   position: number;
   attempt: number;
   board: string[][];
+  
 }
 
 export const Letter: React.FunctionComponent<ILetterProps> = ({ position, attempt, board }) => {

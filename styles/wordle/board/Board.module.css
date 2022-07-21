@@ -1,5 +1,5 @@
 .boardRow {
   display: flex;
+  justify-content: center;
   width: 100%;
-  border: 2px solid green;
 }
