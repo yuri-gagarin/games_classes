@@ -57,25 +57,26 @@ export const decrementPointer = (oldPtr: Pointer): Pointer => {
       result.posX -= 1;
     }
   }
-  console.log(result);
   return result;
 };
 
-export const enterLetter = (dispatch: Dispatch<EnterCharacter>, character: string, currentState: WordleState) => {
+export const enterLetter = (dispatch: Dispatch<EnterCharacter>, character: string, currentState: WordleState): void => {
   const { posX, posY } = currentState.cursor;
   const updatedBoard: string[][] = currentState.board.map((col, i) => {
-    if (i ===  posX) {
-      const inner: string[] = col.map((row, j) => {
+    if (i === posX) {
+      const inner: string[] = col.map((colVal, j) => {
         if (j == posY) {
           return character;
         } else {
-          return row[j];
+          return colVal;
         }
       })
-      return inner;
+      return inner;      
     } else {
       return [ ...col ]
     }
   });
+  const updatedCursor = incrementPointer(currentState.cursor);
+  return dispatch({ type: "EnterCharacter", payload: { cursor: updatedCursor, board: updatedBoard } });
+};
 
-}
