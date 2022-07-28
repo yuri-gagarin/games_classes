@@ -20,7 +20,14 @@ type DeleteKeyPress = {
   readonly type: "DeleteKeyPress";
   readonly payload: { cursor: Pointer, board: string[][] }
 };
-
+type SetIncorrectInput = {
+  readonly type: "SetIncorrectInput";
+  readonly payload: { message: string };
+};
+type ClearIncorrectInput = {
+  readonly type: "ClearIncorrectInput";
+  readonly payload: null // we can build on this.. sure //
+}
 
 
 
@@ -34,7 +41,7 @@ export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   }
 };
 
-export type WordleAction = GenerateBoard | ProcessGuess | EnterCharacter | DeleteKeyPress;
+export type WordleAction = GenerateBoard | ProcessGuess | EnterCharacter | DeleteKeyPress | SetIncorrectInput | ClearIncorrectInput;
 
 export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: number, rows: number): void => {
   const board = generateBoard(cols, rows);

@@ -1,9 +1,12 @@
 .letterMain {
-  border: 2px solid lightgreen;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 50px;
   width: 50px;
   cursor: pointer;
+  border-radius: 5px;
+  background-color: lightblue;
+  font-size: 2em;
+  margin: 1px;
 }

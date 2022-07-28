@@ -6,12 +6,14 @@ export type WordleState = {
   board: string[][];
   pastGuesses: string[];
   targetWord: string;
+  incorrectInput: { message: string } | null;
 };
 export const INIT_STATE: WordleState = {
   cursor: { posX: 0, posY: 0, row: 0 },
   board: [],
   pastGuesses: [],
   targetWord: "",
+  incorrectInput: null
 };
 
 export default function wordleReducer(wordleState: WordleState = INIT_STATE, action: WordleAction): WordleState {
@@ -40,6 +42,18 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
         ...wordleState,
         cursor: { ...action.payload.cursor },
         board: [ ...action.payload.board ]
+      };
+    }
+    case "SetIncorrectInput": {
+      return {
+        ...wordleState,
+        incorrectInput: { ...action.payload }
+      };
+    }
+    case "ClearIncorrectInput": {
+      return {
+        ...wordleState,
+        incorrectInput: action.payload
       };
     }
     default: return wordleState;
