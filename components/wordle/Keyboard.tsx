@@ -5,7 +5,7 @@ import { Key } from "../../components/wordle/Key";
 // context //
 // css // 
 import styles from "../../styles/wordle/keyboard/Keyboard.module.css";
-import { enterLetter, deleteKeyPress } from "../../context/actions/wordle/wordleActions";
+import { enterLetter, deleteKeyPress, guessWord } from "../../context/actions/wordle/wordleActions";
 // types //
 import type { Dispatch } from "react";
 import type { WordleState } from '../../context/reducers/wordleReducer';
@@ -27,11 +27,12 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
     const value: string = e.currentTarget.innerHTML;
     enterLetter(dispatch, value, wordleState);
   };
+
   const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
     if (e.code === "Backspace") {
       return deleteKeyPress(dispatch, wordleState);
     } else if (e.code === "Enter") {
-      console.log("enter pressed") 
+      guessWord(dispatch, wordleState);
     } else {
       return enterLetter(dispatch, e.key.toUpperCase(), wordleState);
     }
@@ -41,13 +42,13 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
     if (e.currentTarget.innerHTML === "DELETE") {
       deleteKeyPress(dispatch, wordleState);
     }
-  }
+  };
 
   useEffect(() => {
     //console.log(wordleState.cursor)
     window.addEventListener("keyup", handleKeyboardPress);
     return () => window.removeEventListener("keyup", handleKeyboardPress);
-  }, [ handleKeyboardPress ])
+  }, [ handleKeyboardPress ]);
   
   return (
     <Segment>

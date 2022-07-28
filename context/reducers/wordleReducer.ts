@@ -1,17 +1,17 @@
 import type { WordleAction } from "../actions/wordle/wordleActions";
 //
-export type Pointer = { posX: number, posY: number };
+export type Pointer = { posX: number, posY: number; row: number };
 export type WordleState = {
   cursor: Pointer;
   board: string[][];
+  pastGuesses: string[];
   targetWord: string;
-  currentGuess: string;
 };
 export const INIT_STATE: WordleState = {
-  cursor: { posX: 0, posY: 0 },
+  cursor: { posX: 0, posY: 0, row: 0 },
   board: [],
+  pastGuesses: [],
   targetWord: "",
-  currentGuess: ""
 };
 
 export default function wordleReducer(wordleState: WordleState = INIT_STATE, action: WordleAction): WordleState {
@@ -22,10 +22,10 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
         ...action.payload,
       };
     }
-    case "GuessWord": {
+    case "ProcessGuess": {
       return {
         ...wordleState,
-        ...action.payload
+        pastGuesses: [ ...wordleState.pastGuesses, action.payload.targetWord ]
       };
     }
     case "EnterCharacter": {
@@ -33,14 +33,14 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
         ...wordleState,
         cursor: { ...action.payload.cursor },
         board: [ ...action.payload.board ]
-      }
+      };
     }
     case "DeleteKeyPress": {
       return {
         ...wordleState,
         cursor: { ...action.payload.cursor },
         board: [ ...action.payload.board ]
-      }
+      };
     }
     default: return wordleState;
   }

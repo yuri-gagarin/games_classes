@@ -8,41 +8,78 @@ type GenerateBoard = {
   readonly type: "GenerateBoard";
   readonly payload: { board: string[][] };
 };
-type GuessWord = {
-  readonly type: "GuessWord";
+type ProcessGuess = {
+  readonly type: "ProcessGuess";
   readonly payload: { targetWord: string };
 };
 type EnterCharacter = {
   readonly type: "EnterCharacter";
-  readonly payload: { cursor: { posX: number; posY: number }; board: string[][] };
+  readonly payload: { cursor: Pointer; board: string[][] };
 };
 type DeleteKeyPress = {
   readonly type: "DeleteKeyPress";
   readonly payload: { cursor: Pointer, board: string[][] }
 };
 
+type WordValidationRes = {
+  valid: boolean;
+  word: string;
+};
 
-export type WordleAction = GenerateBoard | GuessWord | EnterCharacter | DeleteKeyPress;
+const validateGuessedWord = (board: string[][], rowToCheck: number): WordValidationRes => {
+  const word: string[] = [];
+  const response: WordValidationRes = { valid: false, word: "" };
+  for (let col = 0; col < board.length; col++) {
+    for (let row = 0; row < board[col].length; row++) {
+      if (row === rowToCheck) {
+        // we need to check if value is present //
+        if ((/[a-zA-Z]/).test(board[col][row])) {
+          word.push(board[col][row]);
+          break;
+        } else {
+          return { valid: false, word: word.join("") }
+        }
+      } else {
+        continue;
+      }
+    }
+  }
+  return { valid: true, word: word.join("") };
+};
+
+export type WordleAction = GenerateBoard | ProcessGuess | EnterCharacter | DeleteKeyPress;
 
 export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: number, rows: number): void => {
   const board = generateBoard(cols, rows);
   return dispatch({ type: "GenerateBoard", payload: { board } });
 };
-export const guessWord = (dispatch: Dispatch<GuessWord>, word: string, currentState: WordleState): void => {
-
+export const guessWord = (dispatch: Dispatch<ProcessGuess>, currentState: WordleState): void => {
+  // alright 
+  const { pastGuesses, board, cursor } = currentState;
+  if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
+    const { valid, word } = validateGuessedWord(board, cursor.row - 1);
+    if (valid && word.length === 5) {
+      dispatch({ type: "ProcessGuess", payload: { targetWord: word } });
+    }
+  } else {
+    console.log("cant guess")
+    return;
+  }
 };
 
 export const incrementPointer = (oldPtr: Pointer): Pointer => {
   const result: Pointer = { ...oldPtr };
   if (oldPtr.posX === 4 && oldPtr.posY === 4) {
-    return result;
+    console.log("should be her")
+    result.posX += 1;
+  } else if (oldPtr.posX === 4 && oldPtr.posY < 4) {
+    result.posX = 0;
+    result.posY += 1;
+    result.row += 1;
+  } else if (oldPtr.posX < 4 && oldPtr.posY <= 4) {
+    result.posX += 1
   } else {
-    if (oldPtr.posX === 4) {
-      result.posX = 0;
-      result.posY += 1;
-    } else {
-      result.posX +=1;
-    }
+    return oldPtr;
   }
   return result;
 };
@@ -104,7 +141,7 @@ export const deleteKeyPress = (dispatch: Dispatch<DeleteKeyPress>, currentState:
 export const enterLetter = (dispatch: Dispatch<EnterCharacter>, character: string, currentState: WordleState): void => {
   const { posX, posY } = currentState.cursor;
   // 
-  if (posX === 4 && posY === 4) return;
+  //if (posX === 4 && posY === 4) return;
 
   const updatedBoard: string[][] = currentState.board.map((col, i) => {
     if (i === posX) {

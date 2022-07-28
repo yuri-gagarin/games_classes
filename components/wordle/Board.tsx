@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Segment } from "semantic-ui-react";
 // additional components //
 import { Letter } from './Letter';
@@ -17,10 +17,21 @@ interface IBoardProps {
 }
 
 export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, dispatch }): JSX.Element => {
+  const rowRef = useRef<number>(wordleState.cursor.row);
+  const [ rowHighlighted, setRowHighlited ] = useState<number>()
   const { board } = wordleState;
+
   useEffect(() => {
     generateNewGameBoard(dispatch, 5, 5);
   }, []);
+
+  useEffect(() => {
+    const { row: newRow } = wordleState.cursor;
+    if (newRow > rowRef.current) {
+      console.log("Now row is: " + newRow);
+      rowRef.current += 1;
+    }
+  }, [ wordleState.cursor ]);
 
   // let's talk about how to make this more dynamic in class //
   if (board.length > 0) {
