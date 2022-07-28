@@ -12,9 +12,9 @@ export const Key: React.FunctionComponent<IKeyProps> = ({ keyValue, actionKey, s
   return (
     actionKey 
     ?
-      <div className={ `${styles.key} ${styles.actionKey}` } onClick={ selectLetter }>{ keyValue }</div>
+      <div className={ `${styles.key} ${styles.actionKey}` } onClick={ selectLetter } >{ keyValue }</div>
     :
-      <div className={ `${styles.key} ${styles.regKey}` } onClick={ selectLetter} >{ keyValue }</div>
+      <div className={ `${styles.key} ${styles.regKey}` } onClick={ selectLetter}  >{ keyValue }</div>
   );
 };
 

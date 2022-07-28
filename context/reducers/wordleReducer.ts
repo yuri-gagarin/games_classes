@@ -35,6 +35,13 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
         board: [ ...action.payload.board ]
       }
     }
+    case "DeleteKeyPress": {
+      return {
+        ...wordleState,
+        cursor: { ...action.payload.cursor },
+        board: [ ...action.payload.board ]
+      }
+    }
     default: return wordleState;
   }
 };

@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Segment } from 'semantic-ui-react';
 // additional components //
 import { Key } from "../../components/wordle/Key";
 // context //
 // css // 
 import styles from "../../styles/wordle/keyboard/Keyboard.module.css";
-import { enterLetter, WordleAction } from "../../context/actions/wordle/wordleActions";
+import { enterLetter, deleteKeyPress } from "../../context/actions/wordle/wordleActions";
 // types //
 import type { Dispatch } from "react";
 import type { WordleState } from '../../context/reducers/wordleReducer';
+import type { WordleAction } from "../../context/actions/wordle/wordleActions";
+
 
 interface IKeyboardProps {
   wordleState: WordleState;
@@ -25,10 +27,27 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
     const value: string = e.currentTarget.innerHTML;
     enterLetter(dispatch, value, wordleState);
   };
+  const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
+    if (e.code === "Backspace") {
+      return deleteKeyPress(dispatch, wordleState);
+    } else if (e.code === "Enter") {
+      console.log("enter pressed") 
+    } else {
+      return enterLetter(dispatch, e.key.toUpperCase(), wordleState);
+    }
+  }, [ wordleState ]);
+
+  const selectDeleteKey = (e: React.MouseEvent<HTMLDivElement>): void => {
+    if (e.currentTarget.innerHTML === "DELETE") {
+      deleteKeyPress(dispatch, wordleState);
+    }
+  }
 
   useEffect(() => {
-
-  }, [])
+    //console.log(wordleState.cursor)
+    window.addEventListener("keyup", handleKeyboardPress);
+    return () => window.removeEventListener("keyup", handleKeyboardPress);
+  }, [ handleKeyboardPress ])
   
   return (
     <Segment>
@@ -37,7 +56,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow1.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter } />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter }  />
             )
           })
         }
@@ -68,7 +87,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
       <div className={ styles.keyRowOuter }>
         <div className={ `${styles.keyRowInner} ${styles.keyRowInner4}` }>
           <Key keyValue='ENTER' selectLetter={ selectLetter } actionKey />
-          <Key keyValue='"DELETE' selectLetter={ selectLetter} actionKey />
+          <Key keyValue='DELETE' selectLetter={ selectDeleteKey } actionKey />
         </div>
       </div>
       

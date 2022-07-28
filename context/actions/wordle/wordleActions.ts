@@ -16,16 +16,20 @@ type EnterCharacter = {
   readonly type: "EnterCharacter";
   readonly payload: { cursor: { posX: number; posY: number }; board: string[][] };
 };
+type DeleteKeyPress = {
+  readonly type: "DeleteKeyPress";
+  readonly payload: { cursor: Pointer, board: string[][] }
+};
 
 
-export type WordleAction = GenerateBoard | GuessWord | EnterCharacter;
+export type WordleAction = GenerateBoard | GuessWord | EnterCharacter | DeleteKeyPress;
 
 export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: number, rows: number): void => {
   const board = generateBoard(cols, rows);
   return dispatch({ type: "GenerateBoard", payload: { board } });
 };
 export const guessWord = (dispatch: Dispatch<GuessWord>, word: string, currentState: WordleState): void => {
- 
+
 };
 
 export const incrementPointer = (oldPtr: Pointer): Pointer => {
@@ -40,7 +44,6 @@ export const incrementPointer = (oldPtr: Pointer): Pointer => {
       result.posX +=1;
     }
   }
-  console.log(result);
   return result;
 };
 
@@ -60,8 +63,49 @@ export const decrementPointer = (oldPtr: Pointer): Pointer => {
   return result;
 };
 
+export const deleteKeyPress = (dispatch: Dispatch<DeleteKeyPress>, currentState: WordleState): void => {
+  const { posX, posY } = currentState.cursor;
+  let updatedBoard: string[][] = [];
+  if (posX === 0 && posY > 0) {
+    updatedBoard = currentState.board.map((col, i) => {
+      if (i === 4) {
+        const inner: string[] = col.map((colVal, j) => {
+          if (j === posY - 1) {
+            return "0";
+          } else {
+            return colVal;
+          }
+        })
+        return inner;
+      } else {
+        return [ ...col ];
+      }
+    })
+  } else {
+    updatedBoard = currentState.board.map((col, i) => {
+      if (i === posX - 1) {
+        const inner: string[] = col.map((colVal, j) => {
+          if (j === posY) {
+            return "0"
+          } else {
+            return colVal
+          }
+        });
+        return inner;
+      } else {
+        return [ ...col ]
+      }
+    });
+  }
+  const updatedCursor = decrementPointer(currentState.cursor);
+  return dispatch({ type: "DeleteKeyPress", payload: { cursor: updatedCursor, board: updatedBoard } });
+};
+
 export const enterLetter = (dispatch: Dispatch<EnterCharacter>, character: string, currentState: WordleState): void => {
   const { posX, posY } = currentState.cursor;
+  // 
+  if (posX === 4 && posY === 4) return;
+
   const updatedBoard: string[][] = currentState.board.map((col, i) => {
     if (i === posX) {
       const inner: string[] = col.map((colVal, j) => {
