@@ -1,5 +1,13 @@
+.inner {
+  display: table;
+}
+
 .boardRow {
   display: flex;
   justify-content: center;
-  width: 100%;
+}
+
+.rowHighlighted {
+  border: 4px solid lightblue;
+  border-radius: 10px;
 }

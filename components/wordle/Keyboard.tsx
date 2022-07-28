@@ -5,7 +5,7 @@ import { Key } from "../../components/wordle/Key";
 // context //
 // css // 
 import styles from "../../styles/wordle/keyboard/Keyboard.module.css";
-import { enterLetter, deleteKeyPress, guessWord } from "../../context/actions/wordle/wordleActions";
+import { enterLetter, deleteKeyPress, guessWord, ensureDeleteIsAllowed } from "../../context/actions/wordle/wordleActions";
 // types //
 import type { Dispatch } from "react";
 import type { WordleState } from '../../context/reducers/wordleReducer';
@@ -30,7 +30,11 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
 
   const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
     if (e.code === "Backspace") {
-      return deleteKeyPress(dispatch, wordleState);
+      if (ensureDeleteIsAllowed(wordleState)) {
+        return deleteKeyPress(dispatch, wordleState);
+      } else {
+        console.log("can't delete")
+      }
     } else if (e.code === "Enter") {
       guessWord(dispatch, wordleState);
     } else {
@@ -49,7 +53,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
     window.addEventListener("keyup", handleKeyboardPress);
     return () => window.removeEventListener("keyup", handleKeyboardPress);
   }, [ handleKeyboardPress ]);
-  
+
   return (
     <Segment>
       <div className={ styles.keyRowOuter }>

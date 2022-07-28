@@ -1,4 +1,4 @@
-import { generateBoard } from "../../../components/wordle/_helpers/wordleHelpers";
+import { generateBoard, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
 // types //
 import type { Dispatch } from "react";
 import type  { Pointer, WordleState } from "../../reducers/wordleReducer";
@@ -21,30 +21,17 @@ type DeleteKeyPress = {
   readonly payload: { cursor: Pointer, board: string[][] }
 };
 
-type WordValidationRes = {
-  valid: boolean;
-  word: string;
-};
 
-const validateGuessedWord = (board: string[][], rowToCheck: number): WordValidationRes => {
-  const word: string[] = [];
-  const response: WordValidationRes = { valid: false, word: "" };
-  for (let col = 0; col < board.length; col++) {
-    for (let row = 0; row < board[col].length; row++) {
-      if (row === rowToCheck) {
-        // we need to check if value is present //
-        if ((/[a-zA-Z]/).test(board[col][row])) {
-          word.push(board[col][row]);
-          break;
-        } else {
-          return { valid: false, word: word.join("") }
-        }
-      } else {
-        continue;
-      }
-    }
+
+
+export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
+  const { cursor, pastGuesses } = wordleState;
+  if (cursor.row === pastGuesses.length && cursor.posX === 0) {
+    console.log("you've already guessed");
+    return false;
+  } else {
+    return true;
   }
-  return { valid: true, word: word.join("") };
 };
 
 export type WordleAction = GenerateBoard | ProcessGuess | EnterCharacter | DeleteKeyPress;
