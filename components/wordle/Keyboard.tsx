@@ -33,7 +33,14 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
       if (ensureDeleteIsAllowed(wordleState)) {
         return deleteKeyPress(dispatch, wordleState);
       } else {
-        console.log("can't delete")
+        const { cursor, pastGuesses } = wordleState;
+        if (cursor.posX === 0 && cursor.posY === 0) {
+          dispatch({ type: "SetIncorrectInput", payload: { message: "You have not even entered a letter yet!" } });
+        } else if (cursor.posX === 0 && cursor.posY > 0 && cursor.row ===  pastGuesses.length) {
+          dispatch({ type: "SetIncorrectInput", payload: { message: "Woa Woa! No backsies!" } });
+        } else {
+          dispatch({ type: "SetIncorrectInput", payload: { message: "Don't know. Maybe gremlins..." } });
+        }
       }
     } else if (e.code === "Enter") {
       guessWord(dispatch, wordleState);

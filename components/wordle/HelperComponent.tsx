@@ -4,7 +4,7 @@ import styles from "../../styles/wordle/additional/HelperComponent.module.css";
 
 interface IMakeAGuessProps {
   visible: boolean;
-  message: string;
+  message: string | null;
 }
 
 export const HelperComponent: React.FunctionComponent<IMakeAGuessProps> = ({ visible, message }): JSX.Element => {

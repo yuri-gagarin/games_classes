@@ -27,9 +27,7 @@ type SetIncorrectInput = {
 type ClearIncorrectInput = {
   readonly type: "ClearIncorrectInput";
   readonly payload: null // we can build on this.. sure //
-}
-
-
+};
 
 export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   const { cursor, pastGuesses } = wordleState;
@@ -47,7 +45,7 @@ export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: nu
   const board = generateBoard(cols, rows);
   return dispatch({ type: "GenerateBoard", payload: { board } });
 };
-export const guessWord = (dispatch: Dispatch<ProcessGuess>, currentState: WordleState): void => {
+export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, currentState: WordleState): void => {
   // alright 
   const { pastGuesses, board, cursor } = currentState;
   if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
@@ -56,7 +54,7 @@ export const guessWord = (dispatch: Dispatch<ProcessGuess>, currentState: Wordle
       dispatch({ type: "ProcessGuess", payload: { targetWord: word } });
     }
   } else {
-    console.log("cant guess")
+    dispatch({ type: "SetIncorrectInput", payload: { message: "Type in a word first champ" } });
     return;
   }
 };
@@ -132,10 +130,14 @@ export const deleteKeyPress = (dispatch: Dispatch<DeleteKeyPress>, currentState:
   return dispatch({ type: "DeleteKeyPress", payload: { cursor: updatedCursor, board: updatedBoard } });
 };
 
-export const enterLetter = (dispatch: Dispatch<EnterCharacter>, character: string, currentState: WordleState): void => {
-  const { posX, posY } = currentState.cursor;
+export const enterLetter = (dispatch: Dispatch<EnterCharacter | SetIncorrectInput>, character: string, currentState: WordleState): void => {
+  const { cursor, pastGuesses } = currentState;
+  const { posX, posY, row } = cursor;
   // 
   //if (posX === 4 && posY === 4) return;
+  if (posY > 0 && posX === 0 && row !== pastGuesses.length) {
+    return dispatch({ type: "SetIncorrectInput", payload: { message: "Press ENTER to guess a word first" } });
+  }
 
   const updatedBoard: string[][] = currentState.board.map((col, i) => {
     if (i === posX) {

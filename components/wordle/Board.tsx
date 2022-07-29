@@ -19,10 +19,30 @@ interface IBoardProps {
   dispatch: Dispatch<WordleAction>;
 }
 
+function dismissMessageWithTimeout(state: WordleState, dispatch: Dispatch<WordleAction>, delay?: number): NodeJS.Timeout {
+  const [ localState, setLocalState ] = useState<{ timeout: NodeJS.Timeout }>({ timeout: setTimeout(() =>{}) });
+  useEffect(() => {
+    if (state.incorrectInput) {
+      clearTimeout(localState.timeout);
+      setLocalState({ 
+        timeout: setTimeout(() => {
+          dispatch({ type: "ClearIncorrectInput", payload: null })
+        }, delay || 1000)
+      })
+    } else {
+      clearTimeout(localState.timeout);
+    }
+    return () => clearTimeout(localState.timeout);
+  }, [ state ]);
+
+  return localState.timeout;
+} 
+
 export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, dispatch }): JSX.Element => {
   // local
   const rowRef = useRef<number>(wordleState.cursor.row);
   const [ rowHighlighted, setRowHighlited ] = useState<{ row: number | null; }>({ row: null });
+  const inputTimeout = dismissMessageWithTimeout(wordleState, dispatch, 5000)
   //
   const { board } = wordleState;
 
@@ -54,11 +74,13 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
     }
   }, [ wordleState.pastGuesses, rowRef, setRowHighlited ]);
 
+
+
   // let's talk about how to make this more dynamic in class //
   if (board.length > 0) {
     return (
       <Segment style={{ position: "relative", border: "5px solid red", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-        <HelperComponent visible={ true } message={ "Press ENTER to make a guess" } />
+        <HelperComponent visible={ wordleState.incorrectInput ? true : false } message={ wordleState.incorrectInput && wordleState.incorrectInput.message } />
         <div className={ styles.inner }>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 0 && styles.rowHighlighted } ${rowRef.current === 1 && styles.rowFinished }` }>
             <Letter board={ board } position={0} attempt={0} />
