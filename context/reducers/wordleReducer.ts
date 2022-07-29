@@ -1,11 +1,14 @@
 import type { WordleAction } from "../actions/wordle/wordleActions";
 //
+export type CharMap = { [key: string ]: number[] }
 export type Pointer = { posX: number, posY: number; row: number };
 export type WordleState = {
   cursor: Pointer;
   board: string[][];
   pastGuesses: string[];
   targetWord: string;
+  correctlyGuessedLetters: CharMap[];
+  eliminatedLetters: string[];
   incorrectInput: { message: string } | null;
 };
 export const INIT_STATE: WordleState = {
@@ -13,6 +16,8 @@ export const INIT_STATE: WordleState = {
   board: [],
   pastGuesses: [],
   targetWord: "",
+  correctlyGuessedLetters: [],
+  eliminatedLetters: [],
   incorrectInput: null
 };
 

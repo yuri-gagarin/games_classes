@@ -1,3 +1,5 @@
+import type { CharMap } from "../../../context/reducers/wordleReducer";
+
 export const generateBoard = (columns: number, rows: number,): string[][] => {
   const result: string[][] = []
   for (let i = 0; i < columns; i++) {
@@ -35,3 +37,29 @@ export const validateGuessedWord = (board: string[][], rowToCheck: number): Word
   }
   return { valid: true, word: word.join("") };
 };
+
+// guessed === ANGER   target = AMONG 
+export const mapGuessedWord = (guessedWord: string, targetWord: string) => {
+  const correctLettersMap: CharMap = {};
+  const eliminatedLetters: string[] = [];
+
+  if (guessedWord === targetWord) {
+  // yay... //
+  } else {
+    for (let i = 0; i <guessedWord.length; i++) {
+      for (let j = 0; j < targetWord.length; j++) {
+        if (guessedWord[i] === targetWord[j]) {
+          if (correctLettersMap[guessedWord[i]]) {
+            correctLettersMap[guessedWord[i]].push(j);
+          } else {
+            correctLettersMap[guessedWord[i]] = [j]         
+          }
+          continue;
+        }
+        if (j === targetWord.length - 1) {
+          eliminatedLetters.push(guessedWord[i]);
+        }
+      }
+    }
+  }
+}

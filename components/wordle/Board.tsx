@@ -83,40 +83,42 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
         <HelperComponent visible={ wordleState.incorrectInput ? true : false } message={ wordleState.incorrectInput && wordleState.incorrectInput.message } />
         <div className={ styles.inner }>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 0 && styles.rowHighlighted } ${rowRef.current === 1 && styles.rowFinished }` }>
-            <Letter board={ board } position={0} attempt={0} />
-            <Letter board={ board } position={1} attempt={0} />
-            <Letter board={ board } position={2} attempt={0} />
-            <Letter board={ board } position={3} attempt={0} />
-            <Letter board={ board } position={4} attempt={0} />
+            <Letter board={ board } column={0} row={0} />
+            <Letter board={ board } column={1} row={0} />
+            <Letter board={ board } column={2} row={0} />
+            <Letter board={ board } column={3} row={0} />
+            <Letter board={ board } column={4} row={0} />
           </div>
+          { /*
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 1 && styles.rowHighlighted } ${rowRef.current === 2 && styles.rowFinished }` }>
-            <Letter board={ board } position={0} attempt={1} />
-            <Letter board={ board } position={1} attempt={1} />
-            <Letter board={ board } position={2} attempt={1} />
-            <Letter board={ board } position={3} attempt={1} />
-            <Letter board={ board } position={4} attempt={1} />
+            <Letter board={ board } column={0} row={1} />
+            <Letter board={ board } column={1} row={1} />
+            <Letter board={ board } column={2} row={1} />
+            <Letter board={ board } column={3} row={1} />
+            <Letter board={ board } column={4} row={1} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 2 && styles.rowHighlighted } ${rowRef.current === 3 && styles.rowFinished }` }>
-            <Letter board={ board } position={0} attempt={2} />
-            <Letter board={ board } position={1} attempt={2} />
-            <Letter board={ board } position={2} attempt={2} />
-            <Letter board={ board } position={3} attempt={2} />
-            <Letter board={ board } position={4} attempt={2} />
+            <Letter board={ board } column={0} row={2} />
+            <Letter board={ board } column={1} row={2} />
+            <Letter board={ board } column={2} row={2} />
+            <Letter board={ board } column={3} row={2} />
+            <Letter board={ board } column={4} row={2} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 3 && styles.rowHighlighted } ${rowRef.current === 4 && styles.rowFinished }` }>
-            <Letter board={ board } position={0} attempt={3} />
-            <Letter board={ board } position={1} attempt={3} />
-            <Letter board={ board } position={2} attempt={3} />
-            <Letter board={ board } position={3} attempt={3} />
-            <Letter board={ board } position={4} attempt={3} />
+            <Letter board={ board } column={0} row={3} />
+            <Letter board={ board } column={1} row={3} />
+            <Letter board={ board } column={2} row={3} />
+            <Letter board={ board } column={3} row={3} />
+            <Letter board={ board } column={4} row={3} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 4 && styles.rowHighlighted } ${rowRef.current === 5 && styles.rowFinished }` }>
-            <Letter board={ board } position={0} attempt={4} />
-            <Letter board={ board } position={1} attempt={4} />
-            <Letter board={ board } position={2} attempt={4} />
-            <Letter board={ board } position={3} attempt={4} />
-            <Letter board={ board } position={4} attempt={4} />
+            <Letter board={ board } column={0} row={4} />
+            <Letter board={ board } column={1} row={4} />
+            <Letter board={ board } column={2} row={4} />
+            <Letter board={ board } column={3} row={4} />
+            <Letter board={ board } column={4} row={4} />
           </div>
+          */}
         </div>
       </Segment>
     );
