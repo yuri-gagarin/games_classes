@@ -12,8 +12,9 @@ interface ILetterProps {
 
 export const Letter: React.FunctionComponent<ILetterProps> = ({ column, row, wordleState }) => {
   const [ letterState, setLetterState ] = useState<{ correct: boolean; correctIdx: boolean; eliminated: boolean; }>({ correct: false, correctIdx: false, eliminated: false });
+
   useEffect(() => {
-    if (wordleState.pastGuesses.length > 0 && wordleState.pastGuesses.length >= row) {
+    if (wordleState.pastGuesses.length > 0 && wordleState.pastGuesses.length >= row && row !== wordleState.cursor.row) {
       if (wordleState.targetWord.indexOf(wordleState.board[column][row]) > -1) {
          if (wordleState.targetWord[column] === wordleState.board[column][row]) {
           setLetterState({ correct: false, correctIdx: true, eliminated: false })
@@ -24,7 +25,8 @@ export const Letter: React.FunctionComponent<ILetterProps> = ({ column, row, wor
         setLetterState({ correct: false, correctIdx: false, eliminated: true });
       }
     }
-  }, [ wordleState.pastGuesses, wordleState.targetWord, wordleState.board ]);
+  }, [ wordleState.pastGuesses, wordleState.targetWord, wordleState.board, wordleState.cursor ]);
+  
   if (letterState.correct) {
     return (
       <div className={ `${styles.letter} ${styles.letterCorrect}` }>

@@ -68,7 +68,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow1.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter }  />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters} />
             )
           })
         }
@@ -79,7 +79,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow2.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter } />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters}  />
             )
           })
         }
@@ -90,7 +90,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow3.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter } />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters}  />
             )
           })
         }
@@ -98,8 +98,8 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
       </div>
       <div className={ styles.keyRowOuter }>
         <div className={ `${styles.keyRowInner} ${styles.keyRowInner4}` }>
-          <Key keyValue='ENTER' selectLetter={ selectLetter } actionKey />
-          <Key keyValue='DELETE' selectLetter={ selectDeleteKey } actionKey />
+          <Key keyValue='ENTER' selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters}  actionKey />
+          <Key keyValue='DELETE' selectLetter={ selectDeleteKey } eliminatedKeys={wordleState.eliminatedLetters}  actionKey />
         </div>
       </div>
       
