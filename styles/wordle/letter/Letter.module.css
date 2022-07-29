@@ -1,4 +1,4 @@
-.letterMain {
+.letter {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6,7 +6,26 @@
   width: 50px;
   cursor: pointer;
   border-radius: 5px;
-  background-color: lightblue;
   font-size: 2em;
   margin: 1px;
 }
+
+.letterMain {
+  background-color: lightblue;
+}
+
+.letterCorrect {
+  background-color: rgb(46, 46, 173);
+  color: white;
+}
+.letterCorrectIdx {
+  background-color: rgb(25, 104, 57);
+  color: white;
+}
+.letterEliminated {
+  background-color: rgb(179, 46, 46);
+  color: white;
+}
+
+
+

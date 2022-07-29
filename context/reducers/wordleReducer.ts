@@ -15,7 +15,7 @@ export const INIT_STATE: WordleState = {
   cursor: { posX: 0, posY: 0, row: 0 },
   board: [],
   pastGuesses: [],
-  targetWord: "",
+  targetWord: "RIGHT",
   correctlyGuessedLetters: {},
   eliminatedLetters: [],
   incorrectInput: null

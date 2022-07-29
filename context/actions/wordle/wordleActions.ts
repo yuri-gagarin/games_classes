@@ -32,7 +32,6 @@ type ClearIncorrectInput = {
 export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   const { cursor, pastGuesses } = wordleState;
   if (cursor.row === pastGuesses.length && cursor.posX === 0) {
-    console.log("you've already guessed");
     return false;
   } else {
     return true;
@@ -47,10 +46,10 @@ export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: nu
 };
 export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, currentState: WordleState): void => {
   // alright 
-  const { pastGuesses, board, cursor, correctlyGuessedLetters } = currentState;
+  const { pastGuesses, board, cursor, correctlyGuessedLetters, eliminatedLetters: currentEliminated, targetWord } = currentState;
   if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
     const { valid, word } = validateGuessedWord(board, cursor.row - 1);
-    const { correctLettersMap, eliminatedLetters } = mapGuessedWord(word, "RIGHT", correctlyGuessedLetters)
+    const { correctLettersMap, eliminatedLetters } = mapGuessedWord(word, targetWord, correctlyGuessedLetters, currentEliminated);
     if (valid && word.length === 5) {
       dispatch({ type: "ProcessGuess", payload: { correctlyGuessedLetters: correctLettersMap, guessedWord: word, eliminatedLetters } });
     }

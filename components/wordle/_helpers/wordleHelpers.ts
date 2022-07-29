@@ -39,9 +39,9 @@ export const validateGuessedWord = (board: string[][], rowToCheck: number): Word
 };
 
 // guessed === ANGER   target = AMONG 
-export const mapGuessedWord = (guessedWord: string, targetWord: string, currentCharMap: CharMap) => {
+export const mapGuessedWord = (guessedWord: string, targetWord: string, currentCharMap: CharMap, currentEliminated: string[]) => {
   const correctLettersMap: CharMap = { ...currentCharMap }
-  const eliminatedLetters: string[] = [];
+  const eliminatedLetters: string[] = [ ...currentEliminated ];
 
   if (guessedWord === targetWord) {
     // yay... //

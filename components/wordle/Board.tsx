@@ -74,12 +74,6 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
     }
   }, [ wordleState.pastGuesses, rowRef, setRowHighlited ]);
 
-  useEffect(() => {
-    console.log(wordleState)
-  }, [wordleState])
-
-
-
   // let's talk about how to make this more dynamic in class //
   if (board.length > 0) {
     return (
@@ -87,39 +81,39 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
         <HelperComponent visible={ wordleState.incorrectInput ? true : false } message={ wordleState.incorrectInput && wordleState.incorrectInput.message } />
         <div className={ styles.inner }>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 0 && styles.rowHighlighted } ${rowRef.current === 1 && styles.rowFinished }` }>
-            <Letter board={ board } column={0} row={0} />
-            <Letter board={ board } column={1} row={0} />
-            <Letter board={ board } column={2} row={0} />
-            <Letter board={ board } column={3} row={0} />
-            <Letter board={ board } column={4} row={0} />
+            <Letter wordleState={ wordleState } column={0} row={0} />
+            <Letter wordleState={ wordleState } column={1} row={0} />
+            <Letter wordleState={ wordleState } column={2} row={0} />
+            <Letter wordleState={ wordleState } column={3} row={0} />
+            <Letter wordleState={ wordleState } column={4} row={0} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 1 && styles.rowHighlighted } ${rowRef.current === 2 && styles.rowFinished }` }>
-            <Letter board={ board } column={0} row={1} />
-            <Letter board={ board } column={1} row={1} />
-            <Letter board={ board } column={2} row={1} />
-            <Letter board={ board } column={3} row={1} />
-            <Letter board={ board } column={4} row={1} />
+            <Letter wordleState={ wordleState } column={0} row={1} />
+            <Letter wordleState={ wordleState } column={1} row={1} />
+            <Letter wordleState={ wordleState } column={2} row={1} />
+            <Letter wordleState={ wordleState } column={3} row={1} />
+            <Letter wordleState={ wordleState } column={4} row={1} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 2 && styles.rowHighlighted } ${rowRef.current === 3 && styles.rowFinished }` }>
-            <Letter board={ board } column={0} row={2} />
-            <Letter board={ board } column={1} row={2} />
-            <Letter board={ board } column={2} row={2} />
-            <Letter board={ board } column={3} row={2} />
-            <Letter board={ board } column={4} row={2} />
+            <Letter wordleState={ wordleState } column={0} row={2} />
+            <Letter wordleState={ wordleState } column={1} row={2} />
+            <Letter wordleState={ wordleState } column={2} row={2} />
+            <Letter wordleState={ wordleState } column={3} row={2} />
+            <Letter wordleState={ wordleState } column={4} row={2} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 3 && styles.rowHighlighted } ${rowRef.current === 4 && styles.rowFinished }` }>
-            <Letter board={ board } column={0} row={3} />
-            <Letter board={ board } column={1} row={3} />
-            <Letter board={ board } column={2} row={3} />
-            <Letter board={ board } column={3} row={3} />
-            <Letter board={ board } column={4} row={3} />
+            <Letter wordleState={ wordleState } column={0} row={3} />
+            <Letter wordleState={ wordleState } column={1} row={3} />
+            <Letter wordleState={ wordleState } column={2} row={3} />
+            <Letter wordleState={ wordleState } column={3} row={3} />
+            <Letter wordleState={ wordleState } column={4} row={3} />
           </div>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 4 && styles.rowHighlighted } ${rowRef.current === 5 && styles.rowFinished }` }>
-            <Letter board={ board } column={0} row={4} />
-            <Letter board={ board } column={1} row={4} />
-            <Letter board={ board } column={2} row={4} />
-            <Letter board={ board } column={3} row={4} />
-            <Letter board={ board } column={4} row={4} />
+            <Letter wordleState={ wordleState } column={0} row={4} />
+            <Letter wordleState={ wordleState } column={1} row={4} />
+            <Letter wordleState={ wordleState } column={2} row={4} />
+            <Letter wordleState={ wordleState } column={3} row={4} />
+            <Letter wordleState={ wordleState } column={4} row={4} />
           </div>
         </div>
       </Segment>
