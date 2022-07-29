@@ -1,7 +1,7 @@
-import { generateBoard, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
+import { generateBoard, mapGuessedWord, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
 // types //
 import type { Dispatch } from "react";
-import type  { Pointer, WordleState } from "../../reducers/wordleReducer";
+import type { CharMap, Pointer, WordleState } from "../../reducers/wordleReducer";
 
 
 type GenerateBoard = {
@@ -10,7 +10,7 @@ type GenerateBoard = {
 };
 type ProcessGuess = {
   readonly type: "ProcessGuess";
-  readonly payload: { targetWord: string };
+  readonly payload: { correctlyGuessedLetters: CharMap; eliminatedLetters: string[]; guessedWord: string; };
 };
 type EnterCharacter = {
   readonly type: "EnterCharacter";
@@ -47,11 +47,12 @@ export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: nu
 };
 export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, currentState: WordleState): void => {
   // alright 
-  const { pastGuesses, board, cursor } = currentState;
+  const { pastGuesses, board, cursor, correctlyGuessedLetters } = currentState;
   if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
     const { valid, word } = validateGuessedWord(board, cursor.row - 1);
+    const { correctLettersMap, eliminatedLetters } = mapGuessedWord(word, "RIGHT", correctlyGuessedLetters)
     if (valid && word.length === 5) {
-      dispatch({ type: "ProcessGuess", payload: { targetWord: word } });
+      dispatch({ type: "ProcessGuess", payload: { correctlyGuessedLetters: correctLettersMap, guessedWord: word, eliminatedLetters } });
     }
   } else {
     dispatch({ type: "SetIncorrectInput", payload: { message: "Type in a word first champ" } });
@@ -62,7 +63,6 @@ export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, 
 export const incrementPointer = (oldPtr: Pointer): Pointer => {
   const result: Pointer = { ...oldPtr };
   if (oldPtr.posX === 4 && oldPtr.posY === 4) {
-    console.log("should be her")
     result.posX += 1;
   } else if (oldPtr.posX === 4 && oldPtr.posY < 4) {
     result.posX = 0;

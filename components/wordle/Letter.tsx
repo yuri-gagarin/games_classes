@@ -10,10 +10,9 @@ interface ILetterProps {
 }
 
 export const Letter: React.FunctionComponent<ILetterProps> = ({ column, row, board }) => {
-  console.log(column)
   return (
     <div className={ styles.letterMain }>
-      { board[row][column] }
+      { board[column][row] }
     </div>
   );
 };

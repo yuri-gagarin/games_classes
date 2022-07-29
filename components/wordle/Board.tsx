@@ -74,6 +74,10 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
     }
   }, [ wordleState.pastGuesses, rowRef, setRowHighlited ]);
 
+  useEffect(() => {
+    console.log(wordleState)
+  }, [wordleState])
+
 
 
   // let's talk about how to make this more dynamic in class //
@@ -89,7 +93,6 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
             <Letter board={ board } column={3} row={0} />
             <Letter board={ board } column={4} row={0} />
           </div>
-          { /*
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 1 && styles.rowHighlighted } ${rowRef.current === 2 && styles.rowFinished }` }>
             <Letter board={ board } column={0} row={1} />
             <Letter board={ board } column={1} row={1} />
@@ -118,7 +121,6 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
             <Letter board={ board } column={3} row={4} />
             <Letter board={ board } column={4} row={4} />
           </div>
-          */}
         </div>
       </Segment>
     );

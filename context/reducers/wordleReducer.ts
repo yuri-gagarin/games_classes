@@ -7,7 +7,7 @@ export type WordleState = {
   board: string[][];
   pastGuesses: string[];
   targetWord: string;
-  correctlyGuessedLetters: CharMap[];
+  correctlyGuessedLetters: CharMap;
   eliminatedLetters: string[];
   incorrectInput: { message: string } | null;
 };
@@ -16,7 +16,7 @@ export const INIT_STATE: WordleState = {
   board: [],
   pastGuesses: [],
   targetWord: "",
-  correctlyGuessedLetters: [],
+  correctlyGuessedLetters: {},
   eliminatedLetters: [],
   incorrectInput: null
 };
@@ -32,7 +32,9 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
     case "ProcessGuess": {
       return {
         ...wordleState,
-        pastGuesses: [ ...wordleState.pastGuesses, action.payload.targetWord ]
+        pastGuesses: [ ...wordleState.pastGuesses, action.payload.guessedWord ],
+        eliminatedLetters: [ ...action.payload.eliminatedLetters ],
+        correctlyGuessedLetters: { ...action.payload.correctlyGuessedLetters }
       };
     }
     case "EnterCharacter": {
