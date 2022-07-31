@@ -26,6 +26,8 @@ export const Letter: React.FunctionComponent<ILetterProps> = ({ column, row, wor
       } else {
         setLetterState({ exists: true, correctIdx: false, eliminated: false });
       }
+    } else {
+      setLetterState({ exists: false, correctIdx: false, eliminated: false });
     }
   }, [ wordleState, row ]);
 

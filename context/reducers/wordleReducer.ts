@@ -33,12 +33,18 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
       return {
         ...wordleState,
         gameState: action.payload.gameState,
-      }
+      };
+    }
+    case "WonGame": {
+      return {
+        ...wordleState,
+        gameState: action.payload.gameState
+      };
     }
     case "ResetGameState": {
       return {
         ...wordleState,
-        ...action.payload
+        ...action.payload.newState
       };
     }
     case "ProcessGuess": {

@@ -48,8 +48,8 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
   const { board } = wordleState;
 
   const startNewGame = (): void => {
-    dispatch({ type: "StartNewGame", payload: { gameState: "Playing" } });
     resetGameState(dispatch, 5, 5);
+    dispatch({ type: "StartNewGame", payload: { gameState: "Playing" } });
   };
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
   }, []);
 
   useEffect(() => {
-    const { board, cursor} = wordleState;
+    const { board } = wordleState;
     const { valid } = validateGuessedWord(board, rowRef.current);
     if (valid) {
       setRowHighlited({ row: rowRef.current });

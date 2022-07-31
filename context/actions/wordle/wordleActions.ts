@@ -65,12 +65,15 @@ export const resetGameState = (dispatch: Dispatch<ResetGameState>, cols: number,
   return dispatch({ type: "ResetGameState", payload: { newState: gamestate } });
 };
 
-export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, currentState: WordleState): void => {
+export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput | WonGame>, currentState: WordleState): void => {
   // alright 
   const { pastGuesses, board, cursor, targetWord, eliminatedLetters, eliminatedRows } = currentState;
   if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
     const { valid, word } = validateGuessedWord(board, cursor.row - 1);
-    // const { correctLettersMap, eliminatedLetters } = mapGuessedWord(word, targetWord, correctlyGuessedLetters, currentEliminated);
+    if (word === targetWord) {
+      console.log("won!")
+      dispatch({ type: "WonGame", payload: { gameState: "Won" } });
+    }
     const updatedEliminatedLetters: string[] = returnEliminatedLetters(word, targetWord, eliminatedLetters);
     if (valid && word.length === 5) {
       dispatch({ 

@@ -20,6 +20,8 @@ export const Key: React.FunctionComponent<IKeyProps> = ({ keyValue, actionKey, s
           setKeyState({ eliminated: true, correct: false });
         }
       }
+    } else {
+      setKeyState({ eliminated: false, correct: false })
     }
   }, [ eliminatedKeys, currentTarget ]);
 

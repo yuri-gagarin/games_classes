@@ -14,9 +14,6 @@ interface IGameEndScreenProps {
 const GameEndScreen: React.FunctionComponent<IGameEndScreenProps> = ({ wordleState, startNewGame }): JSX.Element => {
   const { gameState, targetWord, pastGuesses } = wordleState;
 
-  useEffect(() => {
-    console.log(wordleState)
-  }, [wordleState]);
   return (
     <Segment className={ styles.mainSegment }>
       <Header textAlign='center'>Wordle!</Header>
