@@ -1,4 +1,4 @@
-import { generateBoard, mapGuessedWord, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
+import { generateBoard, returnEliminatedLetters, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
 // types //
 import type { Dispatch } from "react";
 import type { CharMap, Pointer, WordleState } from "../../reducers/wordleReducer";
@@ -10,7 +10,7 @@ type GenerateBoard = {
 };
 type ProcessGuess = {
   readonly type: "ProcessGuess";
-  readonly payload: { correctlyGuessedLetters: CharMap; eliminatedLetters: string[]; guessedWord: string; };
+  readonly payload: { eliminatedLetters: string[]; eliminatedRows: number[]; guessedWord: string; };
 };
 type EnterCharacter = {
   readonly type: "EnterCharacter";
@@ -31,6 +31,9 @@ type ClearIncorrectInput = {
 
 export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   const { cursor, pastGuesses } = wordleState;
+  console.log("Cursor row: " + cursor.row)
+  console.log("Past guesses: " + pastGuesses.length)
+  console.log("Cursor X: " + cursor.posX)
   if (cursor.row === pastGuesses.length && cursor.posX === 0) {
     return false;
   } else {
@@ -46,12 +49,20 @@ export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: nu
 };
 export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, currentState: WordleState): void => {
   // alright 
-  const { pastGuesses, board, cursor, correctlyGuessedLetters, eliminatedLetters: currentEliminated, targetWord } = currentState;
+  const { pastGuesses, board, cursor, targetWord, eliminatedLetters, eliminatedRows } = currentState;
   if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
     const { valid, word } = validateGuessedWord(board, cursor.row - 1);
-    const { correctLettersMap, eliminatedLetters } = mapGuessedWord(word, targetWord, correctlyGuessedLetters, currentEliminated);
+    // const { correctLettersMap, eliminatedLetters } = mapGuessedWord(word, targetWord, correctlyGuessedLetters, currentEliminated);
+    const updatedEliminatedLetters: string[] = returnEliminatedLetters(word, targetWord, eliminatedLetters);
     if (valid && word.length === 5) {
-      dispatch({ type: "ProcessGuess", payload: { correctlyGuessedLetters: correctLettersMap, guessedWord: word, eliminatedLetters } });
+      dispatch({ 
+        type: "ProcessGuess",
+        payload: { 
+          guessedWord: word, 
+          eliminatedRows: [ ...eliminatedRows, cursor.row - 1],
+          eliminatedLetters: [ ...updatedEliminatedLetters ]
+        } 
+      });
     }
   } else {
     dispatch({ type: "SetIncorrectInput", payload: { message: "Type in a word first champ" } });
@@ -84,6 +95,7 @@ export const decrementPointer = (oldPtr: Pointer): Pointer => {
       // needs to be improved later //
       result.posX = 4;
       result.posY -= 1;
+      result.row -= 1;
     } else {
       result.posX -= 1;
     }

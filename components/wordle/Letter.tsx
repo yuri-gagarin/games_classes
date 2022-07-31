@@ -11,31 +11,37 @@ interface ILetterProps {
 }
 
 export const Letter: React.FunctionComponent<ILetterProps> = ({ column, row, wordleState }) => {
-  const [ letterState, setLetterState ] = useState<{ correct: boolean; correctIdx: boolean; eliminated: boolean; }>({ correct: false, correctIdx: false, eliminated: false });
+  const [ letterState, setLetterState ] = useState<{ exists: boolean; correctIdx: boolean; eliminated: boolean; }>({exists: false, correctIdx: false, eliminated: false });
+
 
   useEffect(() => {
-    if (wordleState.pastGuesses.length > 0 && wordleState.pastGuesses.length >= row && row !== wordleState.cursor.row) {
-      if (wordleState.targetWord.indexOf(wordleState.board[column][row]) > -1) {
-         if (wordleState.targetWord[column] === wordleState.board[column][row]) {
-          setLetterState({ correct: false, correctIdx: true, eliminated: false })
-         } else {
-          setLetterState({ correct: true, correctIdx: false, eliminated: false });
-         }
+    const { eliminatedLetters, eliminatedRows, board, targetWord } = wordleState;
+    console.log("Letter of word: " + targetWord[column])
+    console.log("Letter value: " + board[column][row])
+    if (eliminatedRows.includes(row)) {
+      console.log("this be runnin")
+      // lets set the correct/correctIdx/eliminated //
+      if (eliminatedLetters.includes(board[column][row])) {
+        setLetterState({ exists: false, correctIdx: false, eliminated: true })
+      } else if (targetWord[column] === board[column][row]) {
+        // correct idx //
+        setLetterState({ exists: true, correctIdx: true, eliminated: false });
       } else {
-        setLetterState({ correct: false, correctIdx: false, eliminated: true });
+        setLetterState({ exists: true, correctIdx: false, eliminated: false });
       }
     }
-  }, [ wordleState.pastGuesses, wordleState.targetWord, wordleState.board, wordleState.cursor ]);
+  }, [ wordleState, row ]);
+
   
-  if (letterState.correct) {
+  if (letterState.exists && letterState.correctIdx) {
     return (
-      <div className={ `${styles.letter} ${styles.letterCorrect}` }>
+      <div className={ `${styles.letter} ${styles.letterCorrectIdx}` }>
         { wordleState.board[column][row] }
       </div>
     );
-  } else if (letterState.correctIdx) {
+  } else if (letterState.exists) {
     return (
-      <div className={ `${styles.letter} ${styles.letterCorrectIdx}` }>
+      <div className={ `${styles.letter} ${styles.letterCorrect}` }>
         { wordleState.board[column][row] }
       </div>
     );

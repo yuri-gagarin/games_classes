@@ -38,6 +38,7 @@ export const validateGuessedWord = (board: string[][], rowToCheck: number): Word
   return { valid: true, word: word.join("") };
 };
 
+/*
 // guessed === ANGER   target = AMONG 
 export const mapGuessedWord = (guessedWord: string, targetWord: string, currentCharMap: CharMap, currentEliminated: string[]) => {
   const correctLettersMap: CharMap = { ...currentCharMap }
@@ -63,4 +64,18 @@ export const mapGuessedWord = (guessedWord: string, targetWord: string, currentC
     }
   }
   return { correctLettersMap, eliminatedLetters };
+}
+*/
+export const returnEliminatedLetters = (guessedWord: string, targetWord: string, currentEliminatedLetters: string[]): string[] => {
+  const updatedEliminatedLetters: string[] = [ ...currentEliminatedLetters ];
+  for (const char of guessedWord) {
+    if (targetWord.indexOf(char) === -1) {
+      // we need to eliminated the letter but first ..//
+      // console.log(char);
+      if (!updatedEliminatedLetters.includes(char)) {
+        updatedEliminatedLetters.push(char);
+      }
+    }
+  }
+  return  updatedEliminatedLetters;
 }
