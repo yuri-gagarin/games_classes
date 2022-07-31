@@ -3,6 +3,7 @@ import type { WordleAction } from "../actions/wordle/wordleActions";
 export type CharMap = { [key: string ]: number[] }
 export type Pointer = { posX: number, posY: number; row: number };
 export type WordleState = {
+  gameState: "New" | "Won" | "GameOver";
   cursor: Pointer;
   board: string[][];
   pastGuesses: string[];
@@ -13,6 +14,7 @@ export type WordleState = {
   incorrectInput: { message: string } | null;
 };
 export const INIT_STATE: WordleState = {
+  gameState: "New",
   cursor: { posX: 0, posY: 0, row: 0 },
   board: [],
   pastGuesses: [],

@@ -16,10 +16,7 @@ export const Letter: React.FunctionComponent<ILetterProps> = ({ column, row, wor
 
   useEffect(() => {
     const { eliminatedLetters, eliminatedRows, board, targetWord } = wordleState;
-    console.log("Letter of word: " + targetWord[column])
-    console.log("Letter value: " + board[column][row])
     if (eliminatedRows.includes(row)) {
-      console.log("this be runnin")
       // lets set the correct/correctIdx/eliminated //
       if (eliminatedLetters.includes(board[column][row])) {
         setLetterState({ exists: false, correctIdx: false, eliminated: true })

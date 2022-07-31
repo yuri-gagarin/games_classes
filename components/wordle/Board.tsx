@@ -13,6 +13,7 @@ import styles from "../../styles/wordle/board/Board.module.css";
 import type { Dispatch } from "react";
 import type { WordleState } from '../../context/reducers/wordleReducer';
 import type { WordleAction } from "../../context/actions/wordle/wordleActions";
+import GameEndScreen from './GameEndScreen';
 
 interface IBoardProps {
   wordleState: WordleState;
@@ -79,6 +80,7 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
     return (
       <Segment style={{ position: "relative", border: "5px solid red", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         <HelperComponent visible={ wordleState.incorrectInput ? true : false } message={ wordleState.incorrectInput && wordleState.incorrectInput.message } />
+        <GameEndScreen wordleState={ wordleState } />
         <div className={ styles.inner }>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 0 && styles.rowHighlighted } ${rowRef.current === 1 && styles.rowFinished }` }>
             <Letter wordleState={ wordleState } column={0} row={0} />
