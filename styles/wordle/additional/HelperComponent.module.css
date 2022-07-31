@@ -2,6 +2,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 3px solid green;
   width: 100%;
+}
+
+.innerError {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 262px;
+  color: white;
+  padding: 0.25em;
+  background-color: rgb(140, 36, 36);
+  border-radius: 5px;
+}
+
+.inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 262px;
+  color: white;
+  padding: 0.25em;
+  background-color: rgb(29, 100, 29);
+  border-radius: 5px;
 }

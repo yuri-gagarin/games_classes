@@ -3,14 +3,20 @@ import React from 'react';
 import styles from "../../styles/wordle/additional/HelperComponent.module.css";
 
 interface IMakeAGuessProps {
-  visible: boolean;
+  helperError: { message: string } | null;
   message: string | null;
 }
 
-export const HelperComponent: React.FunctionComponent<IMakeAGuessProps> = ({ visible, message }): JSX.Element => {
+export const HelperComponent: React.FunctionComponent<IMakeAGuessProps> = ({ helperError, message }): JSX.Element => {
   return (
+    helperError 
+    ? 
+      <div className={ styles.helperComponentWrapper } >
+        <div className={ styles.innerError }>{helperError.message }</div>
+      </div>
+    :
     <div className={ styles.helperComponentWrapper } >
-      <div>{ message }</div>
+      <div className={ styles.inner }>{ message ? message : "Game Active" }</div>
     </div>
   );
 };

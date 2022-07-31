@@ -77,7 +77,10 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
   if (board.length > 0) {
     return (
       <Segment style={{ position: "relative", border: "5px solid red", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-        <HelperComponent visible={ wordleState.incorrectInput ? true : false } message={ wordleState.incorrectInput && wordleState.incorrectInput.message } />
+        <HelperComponent 
+          message="Wordle"
+          helperError={ wordleState.incorrectInput }
+        />
         {
           wordleState.gameState !== "Playing" && 
           <GameEndScreen 
