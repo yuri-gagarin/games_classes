@@ -23,6 +23,9 @@
   background-color: red;
   cursor: default;
 }
+.correctKey {
+  background-color: blue;
+}
 
 .key:active {
   background-color: lightblue

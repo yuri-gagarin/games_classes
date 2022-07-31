@@ -29,6 +29,8 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
   };
 
   const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
+    const allowedKeys = [ ...KeyRow1, ...KeyRow2, ...KeyRow3 ];
+
     if (e.code === "Backspace") {
       if (ensureDeleteIsAllowed(wordleState)) {
         return deleteKeyPress(dispatch, wordleState);
@@ -45,7 +47,16 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
     } else if (e.code === "Enter") {
       guessWord(dispatch, wordleState);
     } else {
-      return enterLetter(dispatch, e.key.toUpperCase(), wordleState);
+      const { eliminatedLetters } = wordleState;
+      if (allowedKeys.includes(e.key.toUpperCase())) {
+        if (!eliminatedLetters.includes(e.key.toUpperCase())) {
+          return enterLetter(dispatch, e.key.toUpperCase(), wordleState);
+        } else {
+          console.log("key eliminated")
+        }
+      } else {
+        console.log("bad key")
+      }
     }
   }, [ wordleState ]);
 
@@ -68,7 +79,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow1.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters} />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters} currentTarget={ wordleState.targetWord } />
             )
           })
         }
@@ -79,7 +90,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow2.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters}  />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters} currentTarget={ wordleState.targetWord }  />
             )
           })
         }
@@ -90,7 +101,7 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         {
           KeyRow3.map((key) => {
             return (
-              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters}  />
+              <Key key={key} keyValue={key} selectLetter={ selectLetter } eliminatedKeys={wordleState.eliminatedLetters} currentTarget={ wordleState.targetWord } />
             )
           })
         }
