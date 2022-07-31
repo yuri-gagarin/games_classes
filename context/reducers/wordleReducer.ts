@@ -1,9 +1,11 @@
+import { generateBoard } from "../../components/wordle/_helpers/wordleHelpers";
 import type { WordleAction } from "../actions/wordle/wordleActions";
 //
 export type CharMap = { [key: string ]: number[] }
 export type Pointer = { posX: number, posY: number; row: number };
+export type GameState = "New" | "Playing" | "Won" | "GameOver";
 export type WordleState = {
-  gameState: "New" | "Won" | "GameOver";
+  gameState: GameState;
   cursor: Pointer;
   board: string[][];
   pastGuesses: string[];
@@ -16,7 +18,7 @@ export type WordleState = {
 export const INIT_STATE: WordleState = {
   gameState: "New",
   cursor: { posX: 0, posY: 0, row: 0 },
-  board: [],
+  board: generateBoard(5, 5),
   pastGuesses: [],
   targetWord: "RIGHT",
   //correctlyGuessedLetters: {},
@@ -27,10 +29,16 @@ export const INIT_STATE: WordleState = {
 
 export default function wordleReducer(wordleState: WordleState = INIT_STATE, action: WordleAction): WordleState {
   switch(action.type) {
-    case "GenerateBoard": {
+    case "StartNewGame": {
       return {
         ...wordleState,
-        ...action.payload,
+        gameState: action.payload.gameState,
+      }
+    }
+    case "ResetGameState": {
+      return {
+        ...wordleState,
+        ...action.payload
       };
     }
     case "ProcessGuess": {

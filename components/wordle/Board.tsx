@@ -4,7 +4,7 @@ import { Segment } from "semantic-ui-react";
 import { HelperComponent } from './HelperComponent';
 import { Letter } from './Letter';
 //
-import { generateNewGameBoard } from '../../context/actions/wordle/wordleActions';
+import { resetGameState } from '../../context/actions/wordle/wordleActions';
 // helpers //
 import { validateGuessedWord } from './_helpers/wordleHelpers';
 // css //
@@ -47,18 +47,16 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
   //
   const { board } = wordleState;
 
+  const startNewGame = (): void => {
+    dispatch({ type: "StartNewGame", payload: { gameState: "Playing" } });
+    resetGameState(dispatch, 5, 5);
+  };
+
   useEffect(() => {
-    generateNewGameBoard(dispatch, 5, 5);
+    resetGameState(dispatch, 5, 5);
   }, []);
 
   useEffect(() => {
-    /*
-    const { row: newRow } = wordleState.cursor;
-    if (newRow > rowRef.current) {
-      console.log("Now row is: " + newRow);
-      rowRef.current += 1;
-    }
-    */
     const { board, cursor} = wordleState;
     const { valid } = validateGuessedWord(board, rowRef.current);
     if (valid) {
@@ -80,7 +78,13 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
     return (
       <Segment style={{ position: "relative", border: "5px solid red", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         <HelperComponent visible={ wordleState.incorrectInput ? true : false } message={ wordleState.incorrectInput && wordleState.incorrectInput.message } />
-        <GameEndScreen wordleState={ wordleState } />
+        {
+          wordleState.gameState !== "Playing" && 
+          <GameEndScreen 
+            wordleState={ wordleState } 
+            startNewGame={ startNewGame }
+          />
+        }
         <div className={ styles.inner }>
           <div className={ `${styles.boardRow} ${rowHighlighted.row === 0 && styles.rowHighlighted } ${rowRef.current === 1 && styles.rowFinished }` }>
             <Letter wordleState={ wordleState } column={0} row={0} />

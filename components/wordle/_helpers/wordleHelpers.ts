@@ -1,4 +1,4 @@
-import type { CharMap } from "../../../context/reducers/wordleReducer";
+import type { CharMap, WordleState } from "../../../context/reducers/wordleReducer";
 
 export const generateBoard = (columns: number, rows: number,): string[][] => {
   const result: string[][] = []
@@ -78,4 +78,19 @@ export const returnEliminatedLetters = (guessedWord: string, targetWord: string,
     }
   }
   return  updatedEliminatedLetters;
+};
+
+export const getDefaultGameState = (): WordleState => {
+  const board: string[][] = generateBoard(5, 5);
+  return {
+    gameState: "New",
+    cursor: { posX: 0, posY: 0, row: 0 },
+    board: board,
+    pastGuesses: [],
+    targetWord: "RIGHT",
+    //correctlyGuessedLetters: {},
+    eliminatedRows: [],
+    eliminatedLetters: [],
+    incorrectInput: null
+  }
 }

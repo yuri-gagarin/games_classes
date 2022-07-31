@@ -1,12 +1,12 @@
-import { generateBoard, returnEliminatedLetters, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
+import { generateBoard, getDefaultGameState, returnEliminatedLetters, validateGuessedWord } from "../../../components/wordle/_helpers/wordleHelpers";
 // types //
 import type { Dispatch } from "react";
-import type { CharMap, Pointer, WordleState } from "../../reducers/wordleReducer";
+import type { GameState, Pointer, WordleState } from "../../reducers/wordleReducer";
 
 
-type GenerateBoard = {
-  readonly type: "GenerateBoard";
-  readonly payload: { board: string[][] };
+type ResetGameState = {
+  readonly type: "ResetGameState";
+  readonly payload: { newState: WordleState };
 };
 type ProcessGuess = {
   readonly type: "ProcessGuess";
@@ -29,6 +29,23 @@ type ClearIncorrectInput = {
   readonly payload: null // we can build on this.. sure //
 };
 
+type StartNewGame = {
+  readonly type: "StartNewGame";
+  readonly payload: { gameState: GameState }
+};
+type GiveUp = {
+  readonly type: "GiveUp";
+  readonly payload: { gameState: GameState };
+};
+type WonGame = {
+  readonly type: "WonGame";
+  readonly payload: { gameState: GameState};
+};
+type LostGame = {
+  readonly type: "LostGame";
+  readonly payload: { gameState: GameState};
+};
+
 export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   const { cursor, pastGuesses } = wordleState;
   console.log("Cursor row: " + cursor.row)
@@ -41,12 +58,13 @@ export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   }
 };
 
-export type WordleAction = GenerateBoard | ProcessGuess | EnterCharacter | DeleteKeyPress | SetIncorrectInput | ClearIncorrectInput;
+export type WordleAction = ResetGameState | ProcessGuess | EnterCharacter | DeleteKeyPress | SetIncorrectInput | ClearIncorrectInput | StartNewGame | GiveUp | WonGame | LostGame;
 
-export const generateNewGameBoard = (dispatch: Dispatch<GenerateBoard>, cols: number, rows: number): void => {
-  const board = generateBoard(cols, rows);
-  return dispatch({ type: "GenerateBoard", payload: { board } });
+export const resetGameState = (dispatch: Dispatch<ResetGameState>, cols: number, rows: number): void => {
+  const gamestate = getDefaultGameState();
+  return dispatch({ type: "ResetGameState", payload: { newState: gamestate } });
 };
+
 export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput>, currentState: WordleState): void => {
   // alright 
   const { pastGuesses, board, cursor, targetWord, eliminatedLetters, eliminatedRows } = currentState;
