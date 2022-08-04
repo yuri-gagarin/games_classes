@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Grid, Segment } from "semantic-ui-react";
 // styles //
 import styles from "../../styles/breakout/GameScreen.module.css";
+import { ballData, moveGameBall } from './_helpers/gameBall';
 
 export interface IGameScreenProps {
 }
@@ -20,14 +21,13 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.beginPath();
-        ctx.fillStyle = "red";
-        ctx.arc(x, 50, 20, 0, 2 * Math.PI);
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 4;
-        ctx.fill();
-        ctx.stroke();
-        x += 8;
+        moveGameBall(ctx, ballData);
+        if ((ballData.y - ballData.rad) < 0 || (ballData.y + ballData.rad > canvas.height)) {
+          ballData.dy *= -1;
+        }
+        if ((ballData.x - ballData.rad) < 0 || (ballData.x + ballData.rad > canvas.width)) {
+          ballData.dx *= -1;
+        }
         requestAnimationFrame(render);
       } 
     }
@@ -41,7 +41,7 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
   }, [ canvasRef.current ]);
   return (
     <Segment style={{ border: "5px solid red" }}>
-      <canvas className={ styles.gameCanvas } width={500} height={500} ref={ canvasRef }>
+      <canvas className={ styles.gameCanvas } width={500} height={300} ref={ canvasRef }>
 
       </canvas>
     </Segment>
