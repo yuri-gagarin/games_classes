@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { KeyboardEventHandler, useCallback, useEffect, useRef } from 'react';
 import { Grid, Segment } from "semantic-ui-react";
 // styles //
 import styles from "../../styles/breakout/GameScreen.module.css";
 import { ballData, moveGameBall } from './_helpers/gameBall';
+import { Paddle, paddleData } from './_helpers/paddle';
 
 export interface IGameScreenProps {
 }
@@ -10,6 +11,14 @@ export interface IGameScreenProps {
 export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGameScreenProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
+    console.log(e.key)
+    if (e.key === "ArrowRight") {
+      paddleData.posX += paddleData.dx;
+    } else if (e.key === "ArrowLeft") {
+      paddleData.posX -= paddleData.dx;
+    }
+  }, [ paddleData ]);
   const drawBricks = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>): void => {
 
   };
@@ -28,11 +37,18 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
         if ((ballData.x - ballData.rad) < 0 || (ballData.x + ballData.rad > canvas.width)) {
           ballData.dx *= -1;
         }
+
+        const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 15).draw(ctx);
         requestAnimationFrame(render);
       } 
     }
     render();
   }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyboardPress);
+    return () => window.removeEventListener("keydown", handleKeyboardPress);
+  }, []);
 
   useEffect(() => {
     if (canvasRef.current) {

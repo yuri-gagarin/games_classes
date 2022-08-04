@@ -6,8 +6,8 @@ export const ballData: BallData = {
   x: 60,
   y: 40,
   rad: 10,
-  dx: 3,
-  dy: 3
+  dx: 1,
+  dy: 1
 };
 
 export class GameBall {
