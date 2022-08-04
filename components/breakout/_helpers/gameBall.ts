@@ -5,8 +5,8 @@ export type BallData = {
 }
 
 export const ballData: BallData = {
-  posX: 60,
-  posY: 40,
+  posX: 450,
+  posY: 250,
   rad: 10,
   dX: 1,
   dY: 1
@@ -57,7 +57,7 @@ export class GameBall {
         // we should also reverse dX
         ballData.dX *= -1;
       }
-      ballData.dY *= -1.1
+      ballData.dY *= -1;
     }
   };
 };

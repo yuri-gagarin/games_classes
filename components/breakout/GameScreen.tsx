@@ -1,5 +1,5 @@
 import React, { KeyboardEventHandler, useCallback, useEffect, useRef } from 'react';
-import { Grid, Segment } from "semantic-ui-react";
+import { Button, Grid, Segment } from "semantic-ui-react";
 // styles //
 import styles from "../../styles/breakout/GameScreen.module.css";
 import { GameBall, ballData } from './_helpers/gameBall';
@@ -25,6 +25,7 @@ export interface IGameScreenProps {
 
 export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGameScreenProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const gameRef = useRef<boolean>(false);
 
   const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
     if (e.key === "ArrowRight") {
@@ -43,17 +44,18 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
   
   const renderGame = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>): void => {
     if (!canvasRef.current) return;
+    if (gameRef.current === true) return;
     //
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
-    const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 15, ctx!);
+    const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 200, ctx!);
     const gameBall = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctx!);
     const { bricksList, bricksDataList } = createBrickClasses(15, ctx!);
     //
     const render = () => {
       if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBricks(bricksDataList, bricksList)
+        
         // ball stuff 
         gameBall.draw(ballData);
         gameBall.moveGameBall(ballData);
@@ -63,6 +65,14 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
         // paddle stuff //
         paddle.draw(paddleData);
         paddle.movePaddle(keyHeld, paddleData);
+        //
+        for (let i = 0; i < bricksDataList.length; i++) {
+          if (bricksDataList[i].shownOnScreen) {
+            bricksList[i].setBallCollisionDectector(ballData, bricksDataList[i]);
+          }
+        }
+        drawBricks(bricksDataList, bricksList)
+        
         //
         requestAnimationFrame(render);
       } 
@@ -79,18 +89,19 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
     }
   }, []);
 
-  useEffect(() => {
-    if (canvasRef.current) {
-      renderGame(canvasRef)
-    }
-  }, [ canvasRef.current ]);
-
-
   return (
-    <Segment style={{ border: "5px solid red" }}>
-      <canvas className={ styles.gameCanvas } width={500} height={300} ref={ canvasRef }>
+    <Grid.Column width={16}>
+      <Segment style={{ border: "5px solid red" }}>
+        <canvas className={ styles.gameCanvas } width={500} height={300} ref={ canvasRef }>
 
-      </canvas>
-    </Segment>
+        </canvas>
+      </Segment>
+      <Segment>
+        <Button.Group>
+          <Button content="Start" color="green" onClick={ () => renderGame(canvasRef) } />
+          <Button content="Pause" color="orange" />
+        </Button.Group>
+      </Segment>
+    </Grid.Column>
   );
 }

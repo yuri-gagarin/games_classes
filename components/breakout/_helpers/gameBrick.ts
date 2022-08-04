@@ -1,5 +1,7 @@
+import { BallData } from "./gameBall";
+
 export type BrickData = {
-  posX: number; posY: number;
+  posX: number; posY: number; shownOnScreen: boolean;
 };
 
 export class Brick {
@@ -27,6 +29,18 @@ export class Brick {
     this.canvasCtx.shadowColor = "blue";
     this.canvasCtx.strokeRect(brickData.posX, brickData.posY, this.width, this.height);
     this.canvasCtx.fill();
+  };
+
+  setBallCollisionDectector(ballData: BallData, brickData: BrickData) {
+    //
+    const { posX: ballX, posY: ballY, rad } = ballData;
+    const { posX: brickX, posY: brickY } = brickData;
+    if (ballY + rad <= brickY + 40 && ballX + rad >= brickX && ballX + rad <= brickX + 90) {
+      ballData.dX *= -1;
+      ballData.dY *= -1;
+      brickData.shownOnScreen = false;
+      console.log("hit")
+    }
   }
 
   get _posX(): number {
@@ -48,13 +62,13 @@ export const createBrickClasses = (numberOfBricks: number, canvasCtx: CanvasRend
       // begin a new line //
       const brick = new Brick(posX + 5, posY + 5, 90, 20, canvasCtx);
       bricksList.push(brick);
-      bricksDataList.push({ posX: brick._posX, posY: brick._posY });
+      bricksDataList.push({ posX: brick._posX, posY: brick._posY, shownOnScreen: true });
       posX = 0;
       posY += 30;
     } else {
       const brick = new Brick(posX + 5, posY + 5, 90, 20, canvasCtx);
       bricksList.push(brick);
-      bricksDataList.push({ posX: brick._posX, posY: brick._posY })
+      bricksDataList.push({ posX: brick._posX, posY: brick._posY, shownOnScreen: true });
       posX += 100;
     }
   }
@@ -63,6 +77,9 @@ export const createBrickClasses = (numberOfBricks: number, canvasCtx: CanvasRend
 
 export const drawBricks = (bricksDataList: BrickData[], bricksClasses: Brick[]): void => {
   for (let i = 0; i < bricksDataList.length; i++) {
-    bricksClasses[i].draw(bricksDataList[i])
+    if (bricksDataList[i].shownOnScreen) {
+      bricksClasses[i].draw(bricksDataList[i]);
+    }
   }
-}
+};
+
