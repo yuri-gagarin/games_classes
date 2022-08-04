@@ -15,25 +15,25 @@ const GameEndScreen: React.FunctionComponent<IGameEndScreenProps> = ({ wordleSta
   const { gameState, targetWord, pastGuesses } = wordleState;
 
   return (
-    <Segment className={ styles.mainSegment }>
+    <Segment inverted color="grey" className={ styles.mainSegment }>
       <Header textAlign='center'>Wordle!</Header>
       {
         gameState == "GameOver" &&
-        <Segment>
+        <Segment inverted color="red">
           <div className={ styles.innerText }>You Lost</div>
           <div className={ styles.innerText }>The word was: <span>{targetWord}</span></div>
         </Segment>
       }
       {
         gameState === "New" &&
-        <Segment>
+        <Segment inverted color="grey">
           <div className={ styles.innerText }>Welcome:</div>
           <div className={ styles.innerText }>Select difficulty below and begin!</div>
         </Segment>
       }
       {
         gameState === "Won" &&
-        <Segment>
+        <Segment inverted color="blue">
           <div className={ styles.innerText }>Cogratulations! You Won!</div>
           <div className={ styles.innerText }>{`You guessed correctly in ${pastGuesses.length} turns!`}</div>
         </Segment>
@@ -42,7 +42,7 @@ const GameEndScreen: React.FunctionComponent<IGameEndScreenProps> = ({ wordleSta
       <Button.Group>
         <Button color="blue" content="New Game"  onClick={ startNewGame }/>
         <Button.Or />
-        <Button basic color='green' icon="arrow left" content="Back to Main" />
+        <Button color='green' icon="arrow left" content="Back to Main" />
       </Button.Group>
     </Segment>
   );

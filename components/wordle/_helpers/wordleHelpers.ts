@@ -6,7 +6,7 @@ export const generateBoard = (columns: number, rows: number,): string[][] => {
     result[i] = [];
     for (let j = 0; j < rows; j++) {
       // result[i].push(`r:${j}-c${i}`);
-      result[i].push("0");
+      result[i].push("");
     }
   }
   return result;

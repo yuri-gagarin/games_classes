@@ -48,9 +48,6 @@ type LostGame = {
 
 export const ensureDeleteIsAllowed = (wordleState: WordleState): boolean => {
   const { cursor, pastGuesses } = wordleState;
-  console.log("Cursor row: " + cursor.row)
-  console.log("Past guesses: " + pastGuesses.length)
-  console.log("Cursor X: " + cursor.posX)
   if (cursor.row === pastGuesses.length && cursor.posX === 0) {
     return false;
   } else {
@@ -65,13 +62,12 @@ export const resetGameState = (dispatch: Dispatch<ResetGameState>, cols: number,
   return dispatch({ type: "ResetGameState", payload: { newState: gamestate } });
 };
 
-export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput | WonGame>, currentState: WordleState): void => {
+export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput | WonGame | LostGame>, currentState: WordleState): void => {
   // alright 
   const { pastGuesses, board, cursor, targetWord, eliminatedLetters, eliminatedRows } = currentState;
   if ((cursor.posX === 0 && cursor.posY > 0) && (pastGuesses.length < cursor.row)) {
     const { valid, word } = validateGuessedWord(board, cursor.row - 1);
     if (word === targetWord) {
-      console.log("won!")
       dispatch({ type: "WonGame", payload: { gameState: "Won" } });
     }
     const updatedEliminatedLetters: string[] = returnEliminatedLetters(word, targetWord, eliminatedLetters);
@@ -84,8 +80,17 @@ export const guessWord = (dispatch: Dispatch<ProcessGuess | SetIncorrectInput | 
           eliminatedLetters: [ ...updatedEliminatedLetters ]
         } 
       });
+    } 
+  } else if (cursor.posX === 5 && cursor.posY === 4) {
+    // end of the road //
+    const { valid, word } = validateGuessedWord(board, cursor.row);
+    if (word === targetWord) {
+      dispatch({ type: "WonGame", payload: { gameState: "Won" } });
+    } else {
+      dispatch({ type: "LostGame", payload: { gameState: "GameOver" } });
     }
   } else {
+    console.log(cursor.posX, cursor.posY)
     dispatch({ type: "SetIncorrectInput", payload: { message: "Type in a word first champ" } });
     return;
   }
@@ -132,7 +137,7 @@ export const deleteKeyPress = (dispatch: Dispatch<DeleteKeyPress>, currentState:
       if (i === 4) {
         const inner: string[] = col.map((colVal, j) => {
           if (j === posY - 1) {
-            return "0";
+            return "";
           } else {
             return colVal;
           }
@@ -147,7 +152,7 @@ export const deleteKeyPress = (dispatch: Dispatch<DeleteKeyPress>, currentState:
       if (i === posX - 1) {
         const inner: string[] = col.map((colVal, j) => {
           if (j === posY) {
-            return "0"
+            return ""
           } else {
             return colVal
           }

@@ -52,10 +52,8 @@ export const Keyboard: React.FunctionComponent<IKeyboardProps> = ({ dispatch, wo
         if (!eliminatedLetters.includes(e.key.toUpperCase())) {
           return enterLetter(dispatch, e.key.toUpperCase(), wordleState);
         } else {
-          console.log("key eliminated")
+          dispatch({ type: "SetIncorrectInput", payload: { message: "Key is eliminated" } });
         }
-      } else {
-        console.log("bad key")
       }
     }
   }, [ wordleState ]);

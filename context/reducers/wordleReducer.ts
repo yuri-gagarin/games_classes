@@ -41,6 +41,12 @@ export default function wordleReducer(wordleState: WordleState = INIT_STATE, act
         gameState: action.payload.gameState
       };
     }
+    case "LostGame": {
+      return {
+        ...wordleState,
+        gameState: action.payload.gameState
+      };
+    }
     case "ResetGameState": {
       return {
         ...wordleState,

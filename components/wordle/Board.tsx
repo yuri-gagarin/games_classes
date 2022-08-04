@@ -76,7 +76,7 @@ export const Board: React.FunctionComponent<IBoardProps> = ({  wordleState, disp
   // let's talk about how to make this more dynamic in class //
   if (board.length > 0) {
     return (
-      <Segment style={{ position: "relative", border: "5px solid red", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+      <Segment style={{ position: "relative", display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         <HelperComponent 
           message="Wordle"
           helperError={ wordleState.incorrectInput }
