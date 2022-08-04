@@ -1,3 +1,5 @@
+import type { BallData } from "./gameBall";
+
 export type PaddleData = {
   posX: number;
   posY: number;
