@@ -5,6 +5,7 @@ import styles from "../../styles/breakout/GameScreen.module.css";
 import { GameBall, ballData } from './_helpers/gameBall';
 import { Paddle, paddleData } from './_helpers/paddle';
 import type { KeyMap } from './_helpers/paddle';
+import { createBrickClasses, drawBricks } from './_helpers/gameBrick';
 
 const resetArrowKeys = (keyMap: KeyMap): void => {
   keyMap.up = false;
@@ -47,10 +48,12 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
     const ctx = canvas.getContext("2d");
     const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 15, ctx!);
     const gameBall = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctx!);
+    const { bricksList, bricksDataList } = createBrickClasses(15, ctx!);
     //
     const render = () => {
       if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBricks(bricksDataList, bricksList)
         // ball stuff 
         gameBall.draw(ballData);
         gameBall.moveGameBall(ballData);

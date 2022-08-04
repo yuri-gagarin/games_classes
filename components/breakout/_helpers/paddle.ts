@@ -34,7 +34,7 @@ export class Paddle {
   draw(paddleData: PaddleData) {
     this.canvasCtx.beginPath();
     this.canvasCtx.rect(paddleData.posX, paddleData.posY, this.width, this.height);
-    this.canvasCtx.fillStyle = "white";
+    this.canvasCtx.fillStyle = "blue";
     this.canvasCtx.strokeStyle = "white";
     this.canvasCtx.lineWidth = 2;
     this.canvasCtx.shadowBlur = 0;
