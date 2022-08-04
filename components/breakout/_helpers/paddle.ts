@@ -4,10 +4,12 @@ export type PaddleData = {
   dx: number;
   dy: number;
 };
+export type KeyMap = { left: boolean; right: boolean; up: boolean; down: boolean; };
+
 
 export const paddleData: PaddleData = {
   posX: 10,
-  posY: 200,
+  posY: 280,
   dx: 10,
   dy: 1
 };
@@ -17,24 +19,46 @@ export class Paddle {
   private posY: number;
   private width: number;
   private height: number;
+  private canvasCtx: CanvasRenderingContext2D
 
-  constructor(posX: number, posY: number, width: number, height: number) {
+  constructor(posX: number, posY: number, width: number, height: number, canvasCtx: CanvasRenderingContext2D) {
     this.posX = posX;
     this.posY = posY;
     this.width = width;
     this.height = height;
+    this.canvasCtx = canvasCtx;
   }
 
-  draw(canvasCtx: CanvasRenderingContext2D) {
-    canvasCtx.beginPath();
-    canvasCtx.rect(this.posX, this.posY, this.width, this.height);
-    canvasCtx.fillStyle = "white";
-    canvasCtx.strokeStyle = "white";
-    canvasCtx.lineWidth = 2;
-    canvasCtx.shadowBlur = 0;
-    canvasCtx.shadowColor = "blue";
-    canvasCtx.strokeRect(this.posX, this.posY, this.width, this.height);
-    canvasCtx.fill();
+  draw(paddleData: PaddleData) {
+    this.canvasCtx.beginPath();
+    this.canvasCtx.rect(paddleData.posX, paddleData.posY, this.width, this.height);
+    this.canvasCtx.fillStyle = "white";
+    this.canvasCtx.strokeStyle = "white";
+    this.canvasCtx.lineWidth = 2;
+    this.canvasCtx.shadowBlur = 0;
+    this.canvasCtx.shadowColor = "blue";
+    this.canvasCtx.strokeRect(paddleData.posX, paddleData.posY, this.width, this.height);
+    this.canvasCtx.fill();
+  }
+  movePaddle(keyMap: KeyMap, paddleData: PaddleData): void {
+    if(keyMap.left && !this.hitWall(paddleData)) {
+      paddleData.posX -= paddleData.dx
+    } else if (keyMap.right && !this.hitWall(paddleData)) {
+      paddleData.posX += paddleData.dx
+    } else {
+      return;
+    }
+  }
+  private hitWall(paddleData: PaddleData): boolean {
+    if (paddleData.posX + this.width >= this.canvasCtx.canvas.width) {
+      paddleData.posX = this.canvasCtx.canvas.width - this.width - 1;
+      return true;
+    }
+    if (paddleData.posX <= 0) {
+      paddleData.posX = 1;
+      return true; 
+    }
+    return false;
   }
 };
 

@@ -4,6 +4,20 @@ import { Grid, Segment } from "semantic-ui-react";
 import styles from "../../styles/breakout/GameScreen.module.css";
 import { ballData, moveGameBall } from './_helpers/gameBall';
 import { Paddle, paddleData } from './_helpers/paddle';
+import type { KeyMap } from './_helpers/paddle';
+
+const resetArrowKeys = (keyMap: KeyMap): void => {
+  keyMap.up = false;
+  keyMap.right = false;
+  keyMap.down = false;
+  keyMap.left = false;
+}
+const keyHeld: KeyMap = {
+  left: false,
+  right: false,
+  up: false,
+  down: false
+}
 
 export interface IGameScreenProps {
 }
@@ -14,20 +28,29 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
   const handleKeyboardPress = useCallback((e: KeyboardEvent): void => {
     console.log(e.key)
     if (e.key === "ArrowRight") {
-      paddleData.posX += paddleData.dx;
+      keyHeld.right = true;
     } else if (e.key === "ArrowLeft") {
-      paddleData.posX -= paddleData.dx;
+      keyHeld.left = true;
+    } else {
+      resetArrowKeys(keyHeld)
     }
-  }, [ paddleData ]);
+  }, [ paddleData, keyHeld ]);
+
+  const handleKeyUp = useCallback((): void => {
+    return resetArrowKeys(keyHeld);
+  }, [ keyHeld ]);
+
   const drawBricks = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>): void => {
 
   };
-  const renderBall = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>): void => {
+  const renderGame = (canvasRef: React.MutableRefObject<HTMLCanvasElement | null>): void => {
     if (!canvasRef.current) return;
+    const canvas = canvasRef.current as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d");
+    const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 15, ctx!);
+    
     let x: number = 0;
     const render = () => {
-      const canvas = canvasRef.current as HTMLCanvasElement;
-      const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         moveGameBall(ctx, ballData);
@@ -38,7 +61,10 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
           ballData.dx *= -1;
         }
 
-        const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 15).draw(ctx);
+        // paddle stuff
+        paddle.draw(paddleData);
+        paddle.movePaddle(keyHeld, paddleData);
+        //
         requestAnimationFrame(render);
       } 
     }
@@ -47,12 +73,20 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyboardPress);
-    return () => window.removeEventListener("keydown", handleKeyboardPress);
+    window.addEventListener("keyup", handleKeyUp);
+    return () =>  {
+      window.removeEventListener("keydown", handleKeyboardPress);
+      window.removeEventListener("keyup", handleKeyUp);
+    }
   }, []);
 
   useEffect(() => {
+
+  })
+
+  useEffect(() => {
     if (canvasRef.current) {
-      renderBall(canvasRef)
+      renderGame(canvasRef)
     }
   }, [ canvasRef.current ]);
   return (
