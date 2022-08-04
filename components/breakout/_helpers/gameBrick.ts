@@ -1,8 +1,4 @@
-import { BallData } from "./gameBall";
-
-export type BrickData = {
-  posX: number; posY: number; shownOnScreen: boolean;
-};
+import type { BallData, BrickData } from "./types";
 
 export class Brick {
   private posX: number;
@@ -36,7 +32,6 @@ export class Brick {
     const { posX: ballX, posY: ballY, rad } = ballData;
     const { posX: brickX, posY: brickY } = brickData;
     if (ballY + rad <= brickY + 40 && ballX + rad >= brickX && ballX + rad <= brickX + 90) {
-      ballData.dX *= -1;
       ballData.dY *= -1;
       brickData.shownOnScreen = false;
       console.log("hit")

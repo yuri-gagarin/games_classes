@@ -1,11 +1,13 @@
-import React, { KeyboardEventHandler, useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Button, Grid, Segment } from "semantic-ui-react";
 // styles //
 import styles from "../../styles/breakout/GameScreen.module.css";
-import { GameBall, ballData } from './_helpers/gameBall';
-import { Paddle, paddleData } from './_helpers/paddle';
-import type { KeyMap } from './_helpers/paddle';
+//
+import { ballData, GameBall } from './_helpers/gameBall';
+import { paddleData, Paddle } from './_helpers/paddle';
 import { createBrickClasses, drawBricks } from './_helpers/gameBrick';
+//
+import type { KeyMap } from "./_helpers/types";
 
 const resetArrowKeys = (keyMap: KeyMap): void => {
   keyMap.up = false;

@@ -1,8 +1,5 @@
-import type { KeyMap, PaddleData } from "./paddle";
-
-export type BallData = {
-  posX: number; posY: number; rad: number; dX: number; dY: number;
-}
+import { paddleBallContactTop, paddleBallContactRight, paddleBallContactLeft } from "./collisionDectectors";
+import type { BallData, KeyMap, PaddleData } from "./types";
 
 export const ballData: BallData = {
   posX: 450,
@@ -50,14 +47,16 @@ export class GameBall {
   };
 
   watchForPaddleCollision(ballData: BallData, paddleData: PaddleData, keyMap: KeyMap) {
-    const { posY: paddleY, posX: paddleX } = paddleData;
-    const { posY: ballY, posX: ballX, rad } = ballData;
-    if (ballY + rad >= paddleY && ballX >= paddleX && ballX <= paddleX + 100) {
+    if (paddleBallContactTop(ballData, paddleData)) {
       if (keyMap.left || keyMap.right) {
         // we should also reverse dX
         ballData.dX *= -1;
       }
       ballData.dY *= -1;
+    } else if (paddleBallContactLeft(ballData, paddleData) || paddleBallContactRight(ballData, paddleData)) {
+      ballData.dX *= -1;
+    } else {
+      return;
     }
   };
 };

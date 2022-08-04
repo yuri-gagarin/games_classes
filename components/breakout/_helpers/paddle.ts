@@ -1,13 +1,4 @@
-import type { BallData } from "./gameBall";
-
-export type PaddleData = {
-  posX: number;
-  posY: number;
-  dx: number;
-  dy: number;
-};
-export type KeyMap = { left: boolean; right: boolean; up: boolean; down: boolean; };
-
+import type { KeyMap, PaddleData } from "./types";;
 
 export const paddleData: PaddleData = {
   posX: 10,
