@@ -50,9 +50,9 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
     //
     const canvas = canvasRef.current as HTMLCanvasElement;
     const ctx = canvas.getContext("2d");
-    const paddle = new Paddle(paddleData.posX, paddleData.posY, 100, 200, ctx!);
+    const paddle = new Paddle(paddleData.posX, paddleData.posY, paddleData.width, paddleData.height, ctx!);
     const gameBall = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctx!);
-    const { bricksList, bricksDataList } = createBrickClasses(15, ctx!);
+    const { bricksList } = createBrickClasses(15, ctx!);
     //
     const render = () => {
       if (ctx) {
@@ -68,12 +68,12 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
         paddle.draw(paddleData);
         paddle.movePaddle(keyHeld, paddleData);
         //
-        for (let i = 0; i < bricksDataList.length; i++) {
-          if (bricksDataList[i].shownOnScreen) {
-            bricksList[i].setBallCollisionDectector(ballData, bricksDataList[i]);
+        drawBricks(bricksList);
+        for (let i = 0; i < bricksList.length; i++) {
+          if (bricksList[i]._visible) {
+            bricksList[i].setBallCollisionDectector(ballData);
           }
         }
-        drawBricks(bricksDataList, bricksList)
         
         //
         requestAnimationFrame(render);

@@ -6,6 +6,8 @@ export class Brick {
   private width: number;
   private height: number;
   private canvasCtx: CanvasRenderingContext2D;
+  private visible: boolean  = true;
+  private hits: number = 0;
 
   constructor(posX: number, posY: number, width: number, height: number, canvasCtx: CanvasRenderingContext2D) {
     this.posX = posX;
@@ -15,26 +17,33 @@ export class Brick {
     this.canvasCtx = canvasCtx;
   }
 
-  draw(brickData: BrickData) {
-    this.canvasCtx.beginPath();
-    this.canvasCtx.rect(brickData.posX, brickData.posY, this.width, this.height);
-    this.canvasCtx.fillStyle = "orange";
-    this.canvasCtx.strokeStyle = "white";
-    this.canvasCtx.lineWidth = 2;
-    this.canvasCtx.shadowBlur = 0;
-    this.canvasCtx.shadowColor = "blue";
-    this.canvasCtx.strokeRect(brickData.posX, brickData.posY, this.width, this.height);
-    this.canvasCtx.fill();
+  draw() {
+    if (this._hits < 4) {
+      const color: string = this._hits === 0 ? "white" : (this._hits === 1 ? "orange" : "red")
+      this.canvasCtx.beginPath();
+      this.canvasCtx.rect(this.posX, this.posY, this.width, this.height);
+      this.canvasCtx.fillStyle = color
+      this.canvasCtx.strokeStyle = "white";
+      this.canvasCtx.lineWidth = 2;
+      this.canvasCtx.shadowBlur = 0;
+      this.canvasCtx.shadowColor = "blue";
+      this.canvasCtx.strokeRect(this.posX, this.posY, this.width, this.height);
+      this.canvasCtx.fill();
+    } else {
+      return;
+    }
+    
   };
 
-  setBallCollisionDectector(ballData: BallData, brickData: BrickData) {
-    //
+  setBallCollisionDectector(ballData: BallData) {
+    if (!this.visible) return;
     const { posX: ballX, posY: ballY, rad } = ballData;
-    const { posX: brickX, posY: brickY } = brickData;
-    if (ballY + rad <= brickY + 40 && ballX + rad >= brickX && ballX + rad <= brickX + 90) {
+    if (ballY + rad < this.posY + this.height && ballX + rad >= this.posX && ballX + rad <= this.posX + this.width) {
+      this.hits += 1;
       ballData.dY *= -1;
-      brickData.shownOnScreen = false;
-      console.log("hit")
+      console.log(this.hits)
+      console.log(this.visible)
+      if (this.hits === 3) this.visible = false;
     }
   }
 
@@ -44,11 +53,18 @@ export class Brick {
   get _posY(): number {
     return this.posY;
   }
+
+  get _visible(): boolean {
+    return this.visible;
+  }
+  get _hits(): number {
+    return this.hits;
+  }
 };
 
-export const createBrickClasses = (numberOfBricks: number, canvasCtx: CanvasRenderingContext2D): { bricksList: Brick[]; bricksDataList: BrickData[]; } => {
+export const createBrickClasses = (numberOfBricks: number, canvasCtx: CanvasRenderingContext2D): { bricksList: Brick[]; } => {
   const bricksList: Brick[] = [];
-  const bricksDataList: BrickData[] = [];
+  // const bricksDataList: BrickData[] = [];
 
   let posX: number = 0; let posY: number = 0;
 
@@ -57,23 +73,23 @@ export const createBrickClasses = (numberOfBricks: number, canvasCtx: CanvasRend
       // begin a new line //
       const brick = new Brick(posX + 5, posY + 5, 90, 20, canvasCtx);
       bricksList.push(brick);
-      bricksDataList.push({ posX: brick._posX, posY: brick._posY, shownOnScreen: true });
+      //  bricksDataList.push({ posX: brick._posX, posY: brick._posY, hits: 0, shownOnScreen: true });
       posX = 0;
       posY += 30;
     } else {
       const brick = new Brick(posX + 5, posY + 5, 90, 20, canvasCtx);
       bricksList.push(brick);
-      bricksDataList.push({ posX: brick._posX, posY: brick._posY, shownOnScreen: true });
+      // bricksDataList.push({ posX: brick._posX, posY: brick._posY, hits: 0,  shownOnScreen: true });
       posX += 100;
     }
   }
-  return { bricksList, bricksDataList };
+  return { bricksList };
 }
 
-export const drawBricks = (bricksDataList: BrickData[], bricksClasses: Brick[]): void => {
-  for (let i = 0; i < bricksDataList.length; i++) {
-    if (bricksDataList[i].shownOnScreen) {
-      bricksClasses[i].draw(bricksDataList[i]);
+export const drawBricks = (bricks: Brick[]): void => {
+  for (let i = 0; i < bricks.length; i++) {
+    if (bricks[i]._visible) {
+      bricks[i].draw();
     }
   }
 };

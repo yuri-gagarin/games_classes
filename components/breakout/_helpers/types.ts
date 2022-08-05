@@ -2,9 +2,11 @@ export type BallData = {
   posX: number; posY: number; rad: number; dX: number; dY: number;
 };
 export type BrickData = {
-  posX: number; posY: number; shownOnScreen: boolean;
+  posX: number; posY: number; hits: number; shownOnScreen: boolean;
 };
 export type PaddleData = {
+  width: number;
+  height: number;
   posX: number;
   posY: number;
   dx: number;

@@ -1,6 +1,8 @@
 import type { KeyMap, PaddleData } from "./types";;
 
 export const paddleData: PaddleData = {
+  width: 100,
+  height: 16,
   posX: 10,
   posY: 280,
   dx: 10,
