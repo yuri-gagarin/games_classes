@@ -37,14 +37,26 @@ export class Brick {
 
   setBallCollisionDectector(ballData: BallData) {
     if (!this.visible) return;
-    const { posX: ballX, posY: ballY, rad } = ballData;
-    if (ballY + rad < this.posY + this.height && ballX + rad >= this.posX && ballX + rad <= this.posX + this.width) {
+
+    const distanceX = Math.abs(ballData.posX - this.posX - this.width / 2);
+    const distanceY = Math.abs(ballData.posY - this.posY - this.height / 2);
+
+    console.log(distanceY)
+
+    if (distanceX <= this.width / 2 || distanceY <= this.height / 2) {
       this.hits += 1;
       ballData.dY *= -1;
-      console.log(this.hits)
-      console.log(this.visible)
       if (this.hits === 3) this.visible = false;
     }
+
+    /*
+    const { posX: ballX, posY: ballY, rad } = ballData;
+    if (ballY - rad === this.posY + this.height && ballX + rad >= this.posX && ballX + rad <= this.posX + this.width) {
+      this.hits += 1;
+      ballData.dY *= -1;
+      if (this.hits === 3) this.visible = false;
+    }
+    */
   }
 
   get _posX(): number {

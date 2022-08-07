@@ -48,8 +48,6 @@ export class GameBall {
 
   watchForPaddleCollision(ballData: BallData, paddleData: PaddleData, keyMap: KeyMap) {
     if (paddleWithBallContact(ballData, paddleData)) {
-      console.log(ballData.posY + ballData.rad)
-      console.log(paddleData.posY)
       if (keyMap.left || keyMap.right) {
         // speed up? //
         ballData.dY *= -1;
