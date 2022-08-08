@@ -1,4 +1,9 @@
+import { incrementScore } from "../../../context/actions/breakout/breakOutActions";
+//
+import type { Dispatch } from "react";
+import type { BreakOutAction } from "../../../context/actions/breakout/breakOutActions";
 import type { BallData, BrickData } from "./types";
+import type { GameData } from "../GameScreen";
 
 export class Brick {
   private posX: number;
@@ -35,28 +40,19 @@ export class Brick {
     
   };
 
-  setBallCollisionDectector(ballData: BallData) {
+  setBallCollisionDectector(ballData: BallData, gameData: GameData): void {
     if (!this.visible) return;
 
-    const distanceX = Math.abs(ballData.posX - this.posX - this.width / 2);
-    const distanceY = Math.abs(ballData.posY - this.posY - this.height / 2);
 
-    console.log(distanceY)
-
-    if (distanceX <= this.width / 2 || distanceY <= this.height / 2) {
-      this.hits += 1;
-      ballData.dY *= -1;
-      if (this.hits === 3) this.visible = false;
-    }
-
-    /*
     const { posX: ballX, posY: ballY, rad } = ballData;
-    if (ballY - rad === this.posY + this.height && ballX + rad >= this.posX && ballX + rad <= this.posX + this.width) {
+    if (ballY - rad <= this.posY + this.height && ballX + rad >= this.posX && ballX + rad <= this.posX + this.width) {
+      console.log("hit")
       this.hits += 1;
       ballData.dY *= -1;
+      gameData.score += 1;
       if (this.hits === 3) this.visible = false;
     }
-    */
+
   }
 
   get _posX(): number {
