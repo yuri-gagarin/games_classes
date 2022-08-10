@@ -32,12 +32,15 @@ const gameData: GameData = {
   lives: 5
 };
 
+/*
 type LocalState = {
+  playing: boolean;
   ctx: CanvasRenderingContext2D;
   gameBall: GameBall; 
   paddle: Paddle; 
   bricks: Brick[];
 };
+*/
 
 export interface IGameScreenProps {
 
@@ -46,23 +49,49 @@ export interface IGameScreenProps {
 
 export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGameScreenProps): JSX.Element => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [ localState, setLocalState  ]= useState<LocalState>();
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+  const paddleRef = useRef<Paddle | null>(null)
+  const gameBallRef = useRef<GameBall | null>(null);
+  const bricksRef = useRef<Brick[]>([]);
+  const gameStop = useRef<boolean>(true);
+  //const [ localState, setLocalState  ]= useState<LocalState>();
 
 
   const setUpGame = (canvas: HTMLCanvasElement): void => {
     //
     console.log("ran setup");
-    const ctx = canvas.getContext("2d");
-    const paddle = new Paddle(paddleData.posX, paddleData.posY, paddleData.width, paddleData.height, ctx!);
-    const gameBall = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctx!);
-    const { bricksList } = createBrickClasses(15, ctx!);
+    ctxRef.current = canvas.getContext("2d");
+    paddleRef.current = new Paddle(paddleData.posX, paddleData.posY, paddleData.width, paddleData.height, ctxRef.current!);
+    gameBallRef.current = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctxRef.current!);
+    const { bricksList } = createBrickClasses(15, ctxRef.current!);
+    bricksRef.current = bricksList
     //
-    setLocalState({ ctx: ctx!, gameBall, paddle, bricks: bricksList });
   };
+
+  const startGame = () => {
+    if (gameStop.current) {
+      gameStop.current = false;
+      renderGame();
+    } else {
+      return;
+    }
+  };
+  const pauseGame = () => {
+    gameStop.current = true;
+  };
+
   const renderGame = () => {
     function render() {
-      const { ctx, gameBall, paddle, bricks  } = localState as LocalState;
+      if (gameStop.current) {
+        console.log("pause");
+        return;
+      }
       const canvas = canvasRef.current;
+      const ctx = ctxRef.current!;
+      const gameBall = gameBallRef.current!;
+      const paddle = paddleRef.current!;
+      const bricks = bricksRef.current!;
+
       ctx.clearRect(0, 0, canvas!.width, canvas!.height);
       
       // ball stuff 
@@ -114,6 +143,7 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
     if (canvasRef.current) setUpGame(canvasRef.current)
   }, [ canvasRef.current ]);
 
+
   return (
     <Grid.Column width={16}>
       <Segment style={{ border: "5px solid red" }}>
@@ -131,8 +161,8 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
       </Segment>
       <Segment>
         <Button.Group>
-          <Button content="Start" color="green" onClick={ renderGame } />
-          <Button content="Pause" color="orange" />
+          <Button content="Start" color="green" onClick={ startGame } />
+          <Button content="Pause" color="orange" onClick={ pauseGame } />
         </Button.Group>
       </Segment>
     </Grid.Column>
