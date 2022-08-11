@@ -45,7 +45,7 @@ export class Brick {
 
 
     const { posX: ballX, posY: ballY, rad } = ballData;
-    if (ballY - rad <= this.posY + this.height && ballX + rad >= this.posX && ballX + rad <= this.posX + this.width) {
+    if (ballY - rad <= this.posY + this.height && ballX >= this.posX && ballX <= this.posX + this.width) {
       console.log("hit")
       this.hits += 1;
       ballData.dY *= -1;

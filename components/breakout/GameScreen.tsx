@@ -59,12 +59,16 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
 
   const setUpGame = (canvas: HTMLCanvasElement): void => {
     //
+    if (!gameStop.current) gameStop.current = true;
     console.log("ran setup");
     ctxRef.current = canvas.getContext("2d");
     paddleRef.current = new Paddle(paddleData.posX, paddleData.posY, paddleData.width, paddleData.height, ctxRef.current!);
     gameBallRef.current = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctxRef.current!);
     const { bricksList } = createBrickClasses(15, ctxRef.current!);
     bricksRef.current = bricksList
+
+    ctxRef.current!.clearRect(0, 0, canvas!.width, canvas!.height);
+
     //
   };
 
@@ -79,6 +83,11 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
   const pauseGame = () => {
     gameStop.current = true;
   };
+  const restartGame = () => {
+    if (canvasRef.current) {
+      setUpGame(canvasRef.current);
+    }
+  }
 
   const renderGame = () => {
     function render() {
@@ -163,6 +172,7 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
         <Button.Group>
           <Button content="Start" color="green" onClick={ startGame } />
           <Button content="Pause" color="orange" onClick={ pauseGame } />
+          <Button content="Restart" color="red" onClick={ restartGame } />
         </Button.Group>
       </Segment>
     </Grid.Column>
