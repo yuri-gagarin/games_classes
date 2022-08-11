@@ -9,6 +9,7 @@ import { createBrickClasses, drawBricks } from './_helpers/gameBrick';
 //
 import type { Brick } from "./_helpers/gameBrick";
 import type { KeyMap } from "./_helpers/types";
+import { drawPlayerHUD, Player } from './_helpers/playerHud';
 
 const resetArrowKeys = (keyMap: KeyMap): void => {
   keyMap.up = false;
@@ -54,6 +55,7 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
   const gameBallRef = useRef<GameBall | null>(null);
   const bricksRef = useRef<Brick[]>([]);
   const gameStop = useRef<boolean>(true);
+  const playerRef = useRef<Player | null>(null);
   //const [ localState, setLocalState  ]= useState<LocalState>();
 
 
@@ -66,10 +68,10 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
     gameBallRef.current = new GameBall(ballData.posX, ballData.posY, ballData.rad, ctxRef.current!);
     const { bricksList } = createBrickClasses(15, ctxRef.current!);
     bricksRef.current = bricksList
-
+    playerRef.current = new Player(5);
     ctxRef.current!.clearRect(0, 0, canvas!.width, canvas!.height);
-
     //
+    drawPlayerHUD(ctxRef.current!, playerRef.current, gameData);
   };
 
   const startGame = () => {
@@ -91,17 +93,18 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
 
   const renderGame = () => {
     function render() {
-      if (gameStop.current) {
-        console.log("pause");
-        return;
-      }
+      if (gameStop.current) return;
       const canvas = canvasRef.current;
       const ctx = ctxRef.current!;
       const gameBall = gameBallRef.current!;
       const paddle = paddleRef.current!;
       const bricks = bricksRef.current!;
+      const player = playerRef.current!;
 
       ctx.clearRect(0, 0, canvas!.width, canvas!.height);
+
+      // player hud //
+      drawPlayerHUD(ctx, player, gameData);
       
       // ball stuff 
       gameBall.draw(ballData);
@@ -156,15 +159,7 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
   return (
     <Grid.Column width={16}>
       <Segment style={{ border: "5px solid red" }}>
-        <div className={ styles.playerHUD }>
-          <div className={ styles.playerHUDInner}>
-            <span>Score: </span><span>{ gameData.score }</span>
-          </div>
-          <div className={ styles.playerHUDInner}>
-            <span>Lives: </span><span>{ gameData.lives }</span>
-          </div>
-        </div>
-        <canvas className={ styles.gameCanvas } width={500} height={300} ref={ canvasRef }>
+        <canvas className={ styles.gameCanvas } width={500} height={350} ref={ canvasRef }>
 
         </canvas>
       </Segment>

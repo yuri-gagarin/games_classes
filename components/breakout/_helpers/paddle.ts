@@ -4,7 +4,7 @@ export const paddleData: PaddleData = {
   width: 100,
   height: 16,
   posX: 10,
-  posY: 280,
+  posY: 330,
   dx: 10,
   dy: 1
 };

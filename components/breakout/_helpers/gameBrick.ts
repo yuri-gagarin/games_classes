@@ -1,7 +1,5 @@
 import { incrementScore } from "../../../context/actions/breakout/breakOutActions";
 //
-import type { Dispatch } from "react";
-import type { BreakOutAction } from "../../../context/actions/breakout/breakOutActions";
 import type { BallData, BrickData } from "./types";
 import type { GameData } from "../GameScreen";
 
@@ -74,7 +72,7 @@ export const createBrickClasses = (numberOfBricks: number, canvasCtx: CanvasRend
   const bricksList: Brick[] = [];
   // const bricksDataList: BrickData[] = [];
 
-  let posX: number = 0; let posY: number = 0;
+  let posX: number = 0; let posY: number = 50;
 
   for (let i = 1; i <= numberOfBricks; i++) {
     if (i % 5 === 0) {
