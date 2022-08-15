@@ -69,6 +69,8 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
     const { bricksList } = createBrickClasses(15, ctxRef.current!);
     bricksRef.current = bricksList
     playerRef.current = new Player(5);
+    gameData.score = 0;
+    gameData.lives = 5;
     ctxRef.current!.clearRect(0, 0, canvas!.width, canvas!.height);
     //
     drawPlayerHUD(ctxRef.current!, playerRef.current, gameData);
