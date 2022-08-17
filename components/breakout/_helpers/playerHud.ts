@@ -9,6 +9,10 @@ export class Player {
   public get lives(): number {
     return this._lives;
   }
+
+  public decrementLife(): void {
+    this._lives -=1;
+  }
   public set lives(lives: number) {
     if (lives < 0 || lives > 5) {
       throw new Error("Invalid number for lives");

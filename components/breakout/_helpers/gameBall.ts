@@ -1,4 +1,5 @@
 import { paddleWithBallContact } from "./collisionDectectors";
+import { Player } from "./playerHud";
 import type { BallData, KeyMap, PaddleData } from "./types";
 
 export const ballData: BallData = {
@@ -38,13 +39,20 @@ export class GameBall {
   }
 
   watchForWallCollision(ballData: BallData) {
-    if ((ballData.posY - ballData.rad) < 0 || (ballData.posY + ballData.rad > this.canvasCtx.canvas.height)) {
+    if ((ballData.posY - ballData.rad) < 0 ) {
       ballData.dY *= -1;
     }
     if ((ballData.posX - ballData.rad) < 0 || (ballData.posX + ballData.rad > this.canvasCtx.canvas.width)) {
       ballData.dX *= -1;
     }
   };
+
+  watchForPaddleMiss(ballData: BallData, player: Player,  pause: Function) {
+    if (ballData.posY + ballData.rad >= this.canvasCtx.canvas.height) {
+      player.decrementLife()
+      pause()
+    }
+  }
 
   watchForPaddleCollision(ballData: BallData, paddleData: PaddleData, keyMap: KeyMap) {
     if (paddleWithBallContact(ballData, paddleData)) {

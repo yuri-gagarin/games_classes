@@ -43,14 +43,31 @@ export class Brick {
 
 
     const { posX: ballX, posY: ballY, rad } = ballData;
+    /*
     if (ballY - rad <= this.posY + this.height && ballX >= this.posX && ballX <= this.posX + this.width) {
-      console.log("hit")
       this.hits += 1;
       ballData.dY *= -1;
       gameData.score += 1;
       if (this.hits === 3) this.visible = false;
     }
-
+    */
+  
+    if (ballX + rad > this.posX && ballX < this.posX + this.width && ballY + rad > this.posY && ballY - rad < this._posY + this.height) {
+      this.hits += 1;
+      ballData.dY *= -1;
+      gameData.score += 1;
+      if (this.hits === 3) this.visible = false;
+      return;
+    }
+    if (ballX + rad > this.posX && ballX < this.posX  && ballY > this.posY && ballY < this.posY + this.height) {
+      console.log("left side hit")
+      ballData.dX *= -1;
+    }
+    if (ballX - rad < this.posX + this.width && ballX > this.posX + this.width && ballY > this.posY && ballY < this.posY + this.height) {
+      console.log("right side hit")
+      ballData.dX *= -1;
+    }
+    
   }
 
   get _posX(): number {
