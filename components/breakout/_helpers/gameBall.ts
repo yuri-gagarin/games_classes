@@ -39,7 +39,7 @@ export class GameBall {
   }
 
   watchForWallCollision(ballData: BallData) {
-    if ((ballData.posY - ballData.rad) < 0 ) {
+    if ((ballData.posY - ballData.rad) < 100 ) {
       ballData.dY *= -1;
     }
     if ((ballData.posX - ballData.rad) < 0 || (ballData.posX + ballData.rad > this.canvasCtx.canvas.width)) {
@@ -48,9 +48,18 @@ export class GameBall {
   };
 
   watchForPaddleMiss(ballData: BallData, player: Player,  pause: Function) {
+    console.log(player.lives)
     if (ballData.posY + ballData.rad >= this.canvasCtx.canvas.height) {
-      player.decrementLife()
-      pause()
+      player.decrementLife();
+      pause();
+      ballData.posY = this.canvasCtx.canvas.height / 2;
+      ballData.posX = this.canvasCtx.canvas.width / 2;
+     // first we draw a name //
+      this.canvasCtx.lineWidth = 1;
+      this.canvasCtx.strokeStyle = "white";
+      this.canvasCtx.font = "20px serif";
+      this.canvasCtx.strokeText(`Missed: Press Start to resume!`, 150, this.canvasCtx.canvas.height / 2);
+      // 
     }
   }
 

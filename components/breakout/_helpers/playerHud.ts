@@ -105,5 +105,5 @@ export const drawPlayerHUD = (canvasCtx: CanvasRenderingContext2D, player: Playe
   canvasCtx.font = "20px Arial";
   canvasCtx.strokeText(`S c o r e : ${gameData.score}`, canvasCtx.canvas.width - 125, 25)
 
-  drawLives(gameData.lives, canvasCtx);
+  drawLives(player.lives, canvasCtx);
 }

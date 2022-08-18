@@ -113,6 +113,7 @@ export const GameScreen: React.FunctionComponent<IGameScreenProps> = (props: IGa
       gameBall.moveGameBall(ballData);
       gameBall.watchForWallCollision(ballData);
       gameBall.watchForPaddleCollision(ballData, paddleData, keyHeld);
+      gameBall.watchForPaddleMiss(ballData, player, pauseGame);
       // 
       // paddle stuff //
       paddle.draw(paddleData);
