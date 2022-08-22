@@ -1,4 +1,4 @@
-import { GameState, SnakeAction } from "../actions/breakout/breakOutActions";
+import { GameState, SnakeAction } from "../actions/snake/snakeActions";
 
 export type SnakeState = {
   gameState: GameState;
@@ -15,7 +15,7 @@ export const INIT_STATE: SnakeState = {
 
 export default function SnakeReducer(state: SnakeState = INIT_STATE, action: SnakeAction): SnakeState {
   const { type, payload } = action;
-  
+
   switch (type) {
     case "SetGameState": {
       return {
@@ -27,12 +27,6 @@ export default function SnakeReducer(state: SnakeState = INIT_STATE, action: Sna
       return {
         ...state,
         score: state.score + action.payload.score
-      };
-    }
-    case "DecrementLives": {
-      return {
-        ...state,
-        lives: state.lives = action.payload.lives
       };
     }
     default: return state;
