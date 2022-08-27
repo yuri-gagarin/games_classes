@@ -15,15 +15,15 @@ interface ISnakeBoardProps {
 export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => {
   const [ board, setBoard ] = useState<string[][]>(drawBoard(10));
   return (
-    <div className={ styles.board }>
+    <div className={ styles.snakeBoard }>
       {
         board.map((row, i) => {
           return (
-            <div key={i} className={ styles.boardRow } >
+            <div key={i} className={ styles.snakeBoardRow } >
               {
                 row.map((col, j) => {
                   return (
-                    <div key={ j } className={ styles.boardColumn }>
+                    <div key={ j } className={ styles.snakeBoardCell }>
                     </div>
                   )
                 })
