@@ -2,7 +2,29 @@ import React, { useState } from 'react';
 import styles from "../../styles/snake/SnakeBoard.module.css";
 
 
-const boardSize: number = 10;
+class LinkedListNode {
+  private value: any;
+  private next: any;
+  constructor(value: any) {
+    this.value = value;
+    this.next = null;
+  }
+};
+
+class SingleLinkedList {
+  private head: any;
+  private next: any;
+  constructor(value: any) {
+    const node: LinkedListNode = new LinkedListNode(value);
+    this.head = node;
+    this.next = node;
+  }
+}
+
+
+
+const BOARD_SIZE: number = 10;
+
 
 const drawBoard = (boardSize: number): string[][] => {
   return new Array(boardSize).fill(0).map((row) => {
