@@ -110,12 +110,13 @@ interface ISnakeBoardProps {
 
 export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => {
   const [ board, setBoard ] = useState<number[][]>(createBoard(BOARD_SIZE));
-  const [ snake, setSnake ] = useState(new SingleLinkedList<Cell>(new Cell(6, 5, 45)));
-  const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([44]));
+  const [ snake, setSnake ] = useState(new SingleLinkedList<Cell>(new Cell(4, 4, 45)));
+  const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([45]));
   const [ direction, setDireaction ] = useState<Direction>(Direction.RIGHT);
   //
 
   const getNextHeadCoords = (currentHeadCoords: Cell, direction: Direction): { row: number; col: number; } => {
+
     if (direction === Direction.UP) {
       return {
         row: currentHeadCoords.row - 1,
@@ -145,6 +146,9 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
     const nextHeadVal = board[nextHeadCoords.row][nextHeadCoords.col];
     /// handle a food cell?
 
+    console.log(nextHeadCoords.row, nextHeadCoords.col)
+    console.log(nextHeadVal)
+    console.log()
     const newHead = new LinkedListNode<Cell>(new Cell(nextHeadCoords.row, nextHeadCoords.col, nextHeadVal)); // are we making it too weird? //
     //
     const updatedSnakeCells = new Set(snakeCells);
@@ -152,14 +156,29 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
     updatedSnakeCells.add(nextHeadVal);
 
     snake.head = newHead;
+    if (snake.tail !== null) {
+      snake.tail = snake.tail;
+    } else {
+      snake.tail = snake.head;
+    }
+    setSnakeCells(updatedSnakeCells);
+  }
+
+  const listenToKeyPress = (e: KeyboardEvent) => {
+    if (getDirectionFromKey(e.key) === Direction.NONE) return;
+    setDireaction(getDirectionFromKey(e.key));
   }
 
   useEffect(() => {
-    window.addEventListener("keydown", (e) => {
-      if (getDirectionFromKey(e.key) === Direction.NONE) return;
-      console.log(getDirectionFromKey(e.key));
-    });
+    window.addEventListener("keydown", listenToKeyPress);
+    return () => {
+      window.removeEventListener("keydown", listenToKeyPress);
+    }
   }, []);
+  useEffect(() => {
+    console.log(direction);
+    moveSnake();
+  }, [direction])
 
   return (
     <div className={ styles.snakeBoard }>
