@@ -22,22 +22,28 @@ class LinkedListNode<T> {
 class Cell  {
   private _row: number;
   private _column: number;
-  private _nextHeadVal: number;
+  private _value: number;
 
-  constructor(row: number, column: number, nextHeadVal: number) {
+  constructor(row: number, column: number, value: number) {
     this._row = row;
     this._column = column;
-    this._nextHeadVal = nextHeadVal;
+    this._value = value;
   }
 
+  set row(row: number){
+    this._row = row;
+  }
+  set col(col: number) {
+    this._column = col;
+  }
   get row(): number {
     return this._row;
   }
-  get column(): number {
+  get col(): number {
     return this._column;
   }
-  get nextHeadVal(): number {
-    return this._nextHeadVal;
+  get value(): number {
+    return this._value;
   }
 };
 
@@ -58,18 +64,24 @@ const getDirectionFromKey = (key: string): Direction => {
 
 class SingleLinkedList<T> {
   private _head: LinkedListNode<T>;
-  private _next: LinkedListNode<T>;
+  private _tail: LinkedListNode<T>;
   constructor(value: T) {
     const node: LinkedListNode<T> = new LinkedListNode<T>(value);
     this._head = node;
-    this._next = node;
+    this._tail = node;
   }
 
+  set head(head: LinkedListNode<T>) {
+    this._head = head;
+  }
+  set tail(tail: LinkedListNode<T>) {
+    this._tail = tail;
+  }
   get head(): LinkedListNode<T> {
     return this._head;
   }
-  get next(): LinkedListNode<T> {
-    return this._next;
+  get tail(): LinkedListNode<T> {
+    return this._tail;
   }
 }
 
@@ -100,33 +112,53 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
   const [ board, setBoard ] = useState<number[][]>(createBoard(BOARD_SIZE));
   const [ snake, setSnake ] = useState(new SingleLinkedList<Cell>(new Cell(6, 5, 45)));
   const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([44]));
+  const [ direction, setDireaction ] = useState<Direction>(Direction.RIGHT);
   //
 
-  const getHextHeadCoords = (currentHeadCoords: Cell, direction: Direction) => {
+  const getNextHeadCoords = (currentHeadCoords: Cell, direction: Direction): { row: number; col: number; } => {
     if (direction === Direction.UP) {
-
+      return {
+        row: currentHeadCoords.row - 1,
+        col: currentHeadCoords.col 
+      };
     } else if (direction === Direction.RIGHT) {
-
+      return {
+        row: currentHeadCoords.row,
+        col: currentHeadCoords.col + 1
+      };
     } else if (direction === Direction.DOWN) {
-
+      return {
+        row: currentHeadCoords.row + 1,
+        col: currentHeadCoords.col
+      };
     } else if (direction === Direction.LEFT) {
-
+      return {
+        row: currentHeadCoords.row,
+        col: currentHeadCoords.col - 1
+      }
     } else {
-      return;
+      return { row: currentHeadCoords.row, col: currentHeadCoords.col };
     }
   }
   const moveSnake = () => {
-    const currentHeadCoord = { 
-      row: snake.head.value.row,
-      column: snake.head.value.column
-    };
+    const nextHeadCoords = getNextHeadCoords(snake.head.value, direction);
+    const nextHeadVal = board[nextHeadCoords.row][nextHeadCoords.col];
+    /// handle a food cell?
+
+    const newHead = new LinkedListNode<Cell>(new Cell(nextHeadCoords.row, nextHeadCoords.col, nextHeadVal)); // are we making it too weird? //
+    //
+    const updatedSnakeCells = new Set(snakeCells);
+    updatedSnakeCells.delete(snake.tail.value.value); // confusing //
+    updatedSnakeCells.add(nextHeadVal);
+
+    snake.head = newHead;
   }
 
   useEffect(() => {
     window.addEventListener("keydown", (e) => {
       if (getDirectionFromKey(e.key) === Direction.NONE) return;
       console.log(getDirectionFromKey(e.key));
-    })
+    });
   }, []);
 
   return (
