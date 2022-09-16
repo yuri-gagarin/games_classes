@@ -110,8 +110,8 @@ interface ISnakeBoardProps {
 
 export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => {
   const [ board, setBoard ] = useState<number[][]>(createBoard(BOARD_SIZE));
-  const [ snake, setSnake ] = useState(new SingleLinkedList<Cell>(new Cell(4, 4, 45)));
-  const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([45]));
+  const [ snake, setSnake ] = useState(new SingleLinkedList<Cell>(new Cell(4, 3, 44)));
+  const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([44]));
   const [ direction, setDireaction ] = useState<Direction>(Direction.RIGHT);
   //
 
@@ -146,12 +146,10 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
     const nextHeadVal = board[nextHeadCoords.row][nextHeadCoords.col];
     /// handle a food cell?
 
-    console.log(nextHeadCoords.row, nextHeadCoords.col)
-    console.log(nextHeadVal)
-    console.log()
     const newHead = new LinkedListNode<Cell>(new Cell(nextHeadCoords.row, nextHeadCoords.col, nextHeadVal)); // are we making it too weird? //
     //
     const updatedSnakeCells = new Set(snakeCells);
+    console.log(snake.tail.value)
     updatedSnakeCells.delete(snake.tail.value.value); // confusing //
     updatedSnakeCells.add(nextHeadVal);
 
@@ -175,13 +173,14 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
       window.removeEventListener("keydown", listenToKeyPress);
     }
   }, []);
+
   useEffect(() => {
     console.log(direction);
-    moveSnake();
   }, [direction])
 
   return (
     <div className={ styles.snakeBoard }>
+      <button onClick={moveSnake}>Manual</button>
       {
         board.map((row, indexOfRow) => {
           return (
