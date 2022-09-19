@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { SnakeState } from '../../context/reducers/snakeReducer';
 import styles from "../../styles/snake/SnakeBoard.module.css";
+import { randomIntFromInterval } from './_helpers/snakeHelpers';
 
 
 class LinkedListNode<T> {
   private _value: T;
-  private _next: T| null;
+  private _next: T | null;
   constructor(value: T) {
     this._value = value;
     this._next = null;
@@ -80,7 +81,7 @@ class SingleLinkedList<T> {
   get head(): LinkedListNode<T> {
     return this._head;
   }
-  get tail(): LinkedListNode<T> {
+  get tail(): LinkedListNode<T>{
     return this._tail;
   }
 }
@@ -103,6 +104,8 @@ const createBoard = (BOARD_SIZE: number): number[][] => {
   return board;
 };
 
+
+
 interface ISnakeBoardProps {
   snakeState: SnakeState;
   dispatch: React.Dispatch<any>;
@@ -112,9 +115,22 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
   const [ board, setBoard ] = useState<number[][]>(createBoard(BOARD_SIZE));
   const [ snake, setSnake ] = useState(new SingleLinkedList<Cell>(new Cell(4, 3, 44)));
   const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([44]));
+  const [ pointCell, setPointCell ] = useState<number>(snake.head.value.value + 5)
   const [ direction, setDireaction ] = useState<Direction>(Direction.RIGHT);
   //
 
+  const handlePoint = (BOARD_SIZE: number) => {
+    const maxPossValue: number = Math.pow(BOARD_SIZE, 2);
+    let nextPointCell: number;
+    while(true) {
+      nextPointCell = randomIntFromInterval(1, maxPossValue);
+      if (snakeCells.has(nextPointCell) || pointCell === nextPointCell) {
+        continue;
+      } else {
+        break;
+      }
+    }
+  } 
   const getNextHeadCoords = (currentHeadCoords: Cell, direction: Direction): { row: number; col: number; } => {
 
     if (direction === Direction.UP) {
@@ -149,16 +165,12 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
     const newHead = new LinkedListNode<Cell>(new Cell(nextHeadCoords.row, nextHeadCoords.col, nextHeadVal)); // are we making it too weird? //
     //
     const updatedSnakeCells = new Set(snakeCells);
-    console.log(snake.tail.value)
+    console.log(snake.tail?.value)
     updatedSnakeCells.delete(snake.tail.value.value); // confusing //
     updatedSnakeCells.add(nextHeadVal);
 
     snake.head = newHead;
-    if (snake.tail !== null) {
-      snake.tail = snake.tail;
-    } else {
-      snake.tail = snake.head;
-    }
+    snake.tail = newHead;
     setSnakeCells(updatedSnakeCells);
   }
 
