@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SnakeState } from '../../context/reducers/snakeReducer';
 import styles from "../../styles/snake/SnakeBoard.module.css";
-import { randomIntFromInterval } from './_helpers/snakeHelpers';
+import { checkOutOfBounds, randomIntFromInterval } from './_helpers/snakeHelpers';
 
 
 class LinkedListNode<T> {
@@ -117,6 +117,7 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
   const [ snakeCells, setSnakeCells ] = useState<Set<number>>(new Set([44]));
   const [ pointCell, setPointCell ] = useState<number>(snake.head.value.value + 5)
   const [ direction, setDireaction ] = useState<Direction>(Direction.RIGHT);
+  const [ gameState, setGameState  ] = useState<"Playing" | "Won" | "GameOver" | "Paused">("Paused");
   //
 
   const handlePoint = (BOARD_SIZE: number) => {
@@ -130,7 +131,15 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
         break;
       }
     }
+    setPointCell(nextPointCell);
   } 
+
+  const handleGameOver = () => {
+    console.log("handlegameover")
+    setSnake(new SingleLinkedList<Cell>(new Cell(4, 3, 44)));
+    setSnakeCells(new Set([44]));
+  };
+
   const getNextHeadCoords = (currentHeadCoords: Cell, direction: Direction): { row: number; col: number; } => {
 
     if (direction === Direction.UP) {
@@ -159,15 +168,23 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
   }
   const moveSnake = () => {
     const nextHeadCoords = getNextHeadCoords(snake.head.value, direction);
+    // ok first check out of bounds 
+
     const nextHeadVal = board[nextHeadCoords.row][nextHeadCoords.col];
+    if (checkOutOfBounds(nextHeadCoords, board)) {
+      handleGameOver();
+    }
     /// handle a food cell?
 
     const newHead = new LinkedListNode<Cell>(new Cell(nextHeadCoords.row, nextHeadCoords.col, nextHeadVal)); // are we making it too weird? //
     //
     const updatedSnakeCells = new Set(snakeCells);
-    console.log(snake.tail?.value)
     updatedSnakeCells.delete(snake.tail.value.value); // confusing //
     updatedSnakeCells.add(nextHeadVal);
+
+    if (newHead.value.value === pointCell) {
+      handlePoint(BOARD_SIZE);
+    };
 
     snake.head = newHead;
     snake.tail = newHead;
@@ -200,7 +217,7 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
               {
                 row.map((cellVal, indexOfCell) => {
                   return (
-                    <div key={ "cell" + "_" + indexOfCell } className={ `${styles.boardCell} ${snakeCells.has(cellVal) && styles.snakeCell}` }>
+                    <div key={ "cell" + "_" + indexOfCell } className={ `${styles.boardCell} ${snakeCells.has(cellVal)  && styles.snakeCell} ${cellVal === pointCell && !snakeCells.has(cellVal) && styles.pointCell}` }>
                       {cellVal}
                     </div>
                   )
