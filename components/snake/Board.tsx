@@ -205,6 +205,31 @@ export const SnakeBoard: React.FunctionComponent<ISnakeBoardProps> = (props) => 
 
   useEffect(() => {
     console.log(direction);
+    const moveSnake = () => {
+      const nextHeadCoords = getNextHeadCoords(snake.head.value, direction);
+      // ok first check out of bounds 
+  
+      const nextHeadVal = board[nextHeadCoords.row][nextHeadCoords.col];
+      if (checkOutOfBounds(nextHeadCoords, board)) {
+        handleGameOver();
+      }
+      /// handle a food cell?
+  
+      const newHead = new LinkedListNode<Cell>(new Cell(nextHeadCoords.row, nextHeadCoords.col, nextHeadVal)); // are we making it too weird? //
+      //
+      const updatedSnakeCells = new Set(snakeCells);
+      updatedSnakeCells.delete(snake.tail.value.value); // confusing //
+      updatedSnakeCells.add(nextHeadVal);
+  
+      if (newHead.value.value === pointCell) {
+        handlePoint(BOARD_SIZE);
+      };
+  
+      snake.head = newHead;
+      snake.tail = newHead;
+      setSnakeCells(updatedSnakeCells);
+    }
+  
   }, [direction])
 
   return (
